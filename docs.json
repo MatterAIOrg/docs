@@ -56,6 +56,15 @@
             ]
           },
           {
+            "group": "Axon AI Coding Agent",
+            "icon": "robot",
+            "pages": [
+              "axon-agent/overview",
+              "cli/axon-code-cli",
+              "axon-agent/pricing"
+            ]
+          },
+          {
             "group": "LLM Models and Pricing",
             "icon": "brain-circuit",
             "pages": [
@@ -81,6 +90,7 @@
               "quickstart-ai-code-review-gitlab",
               "quickstart-ai-code-review-atlassian-bitbucket",
               "quickstart-ai-code-review-mcp-server",
+              "ai-code-reviews/pricing",
               {
                 "group": "Features",
                 "pages": [
@@ -281,17 +291,6 @@
         ]
       },
       {
-        "tab": "Axon Code CLI",
-        "pages": [
-          {
-            "group": "Axon Code CLI",
-            "pages": [
-              "cli/axon-code-cli"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "API Reference",
         "pages": [
           {
@@ -305,27 +304,6 @@
             "pages": [
               "api-reference/endpoint/models",
               "api-reference/endpoint/model"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Coding Tools",
-        "pages": [
-          {
-            "group": "Editors",
-            "pages": [
-              "coding-tools/editors/cline",
-              "coding-tools/editors/cursor",
-              "coding-tools/editors/zed",
-              "coding-tools/editors/continue"
-            ]
-          },
-          {
-            "group": "CLI",
-            "pages": [
-              "coding-tools/cli/codex",
-              "coding-tools/cli/claude-code"
             ]
           }
         ]
@@ -348,6 +326,7 @@
           {
             "group": "MatterAI Product Updates",
             "pages": [
+              "changelog/axon-code-changelog",
               "changelog/axon-models-changelog",
               "changelog/ai-code-reviews-changelog"
             ]
