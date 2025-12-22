@@ -1,0 +1,94 @@
+---
+icon: search
+title: 'Advanced Reviews'
+description: 'Learn how to use advanced AI-powered code review with tool-use enabled analysis'
+og:title: "Advanced AI Code Review | MatterAI Documentation"
+og:description: "Advanced AI-powered code review with tool-use enabled analysis for deeper insights"
+tag: "NEW"
+---
+
+<Note>
+Advanced AI Code Review is available on all plans.
+</Note>
+
+This guide walks you through the advanced AI code review capabilities of MatterAI, which provides deeper, more comprehensive analysis using tool-use enabled AI.
+
+## What is Advanced AI Code Review?
+
+The `/matter review-max` command performs deep, tool-enabled code analysis that goes beyond surface-level scanning. The AI can read multiple files, search your codebase for patterns, and provide comprehensive feedback with higher accuracy.
+
+## Key Capabilities
+
+### Tool-Use Enabled Analysis
+- **Multi-file reading**: AI reads relevant files across your codebase
+- **Pattern search**: Searches for similar code patterns and implementations
+- **Context awareness**: Understands your project's architecture and conventions
+- **Dependency analysis**: Analyzes relationships between components
+
+### Deeper Analysis
+- **Architectural issues**: Identifies design pattern violations and architectural concerns
+- **Security vulnerabilities**: Detects potential security risks and best practice violations
+- **Performance bottlenecks**: Finds performance issues and optimization opportunities
+- **Code maintainability**: Suggests improvements for long-term code health
+
+### Confidence Scoring
+Each review comment includes two confidence scores:
+- **Detection confidence**: How confident the AI is about the issue
+- **Fix confidence**: How confident the AI is about the proposed solution
+
+### Smart Suggestions
+- **Precise code suggestions**: Provides exact code changes with line numbers
+- **Context-aware recommendations**: Suggestions consider your project's specific context
+- **Best practice alignment**: Recommendations follow industry best practices
+
+## When to Use Advanced AI Code Review
+
+### Best For:
+- **Complex PRs with multiple files**: When changes span across many files
+- **Security-sensitive changes**: For authentication, authorization, or data handling code
+- **Performance-critical code**: For algorithms, database queries, or rendering code
+- **Architectural reviews**: When making significant structural changes
+
+### Not Recommended For:
+- Simple documentation changes
+- Minor formatting or style fixes
+- Straightforward bug fixes with clear solutions
+
+## How to Use
+
+1. **Trigger the review**: Comment on any PR with `/matter review-max` or `@matterai review-max`
+2. **Wait for analysis**: The AI will analyze your code using tool-use capabilities
+3. **Review the feedback**: Examine the comprehensive review comments with confidence scores
+4. **Apply suggestions**: Use the provided code suggestions to improve your code
+
+## Example Workflow
+
+<Frame>
+<img
+  className="block"
+  src="/images/features/matterai-review-max.png"
+  alt="Advanced AI Code Review Example"
+/>
+</Frame>
+
+## Integration with Other Commands
+
+Advanced AI Code Review works seamlessly with other MatterAI commands:
+
+- **Use with `/matter fix`**: After getting advanced reviews, use the fix command to automatically apply suggestions
+- **Combine with `/matter summary`**: Get both deep analysis and high-level overview
+- **Follow with `/matter explain`**: Get detailed explanations of complex changes
+
+## Benefits
+
+- **3x more comprehensive**: Tool-use enables deeper analysis than standard reviews
+- **Higher accuracy**: Confidence scoring helps prioritize feedback
+- **Context-aware**: Understands your specific codebase and patterns
+- **Time-efficient**: Get thorough reviews without manual deep-dive analysis
+
+## Tips for Best Results
+
+1. **Provide context**: Include relevant background information in your PR description
+2. **Link related issues**: Reference relevant tickets or documentation
+3. **Review confidence scores**: Focus on high-confidence suggestions first
+4. **Ask follow-up questions**: Use `/matter <question>` to clarify complex suggestions

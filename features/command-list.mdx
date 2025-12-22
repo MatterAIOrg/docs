@@ -19,6 +19,8 @@ This guide walks you through the list of commands for MatterAI that can be used 
 | `/matter summary` | Generate AI Summary for the PR |
 | `/matter review` | Generate AI Reviews for the latest commit in the PR |
 | `/matter review-full` | Generate AI Reviews for the complete PR |
+| `/matter review-max` | Advanced AI Code Review with tool-use and deeper analysis |
+| `/matter fix` | Automated Code Fix Generation for review comments |
 | `/matter explain` | Generate AI Explanation for the PR reviewer |
 | `/matter release-notes` | Generate AI release-notes for the PR |
 | `/matter <ask-question>` | Chat with your PR with MatterAI Agent |
@@ -70,6 +72,63 @@ Generate release notes for the Pull Request with summary, new features, bugs, co
   alt="MatterAI Release Notes Command"
 />
 </Frame>
+
+## /matter review-max
+Advanced AI Code Review with tool-use enabled analysis that goes beyond surface-level scanning. This command performs deep, comprehensive code analysis using advanced AI capabilities.
+
+<Frame>
+<img
+  className="block"
+  src="/images/features/matterai-review-max.png"
+  alt="MatterAI Release Notes Command"
+/>
+</Frame>
+
+**Key capabilities:**
+- **Tool-use enabled**: AI reads relevant files and searches codebase for context
+- **Deeper analysis**: Identifies architectural issues, security vulnerabilities, and performance bottlenecks
+- **Confidence scoring**: Each review comment includes detection and fix confidence scores
+- **Smart suggestions**: Provides precise code suggestions with line numbers for easy application
+
+**Best for:**
+- Complex PRs with multiple files
+- Security-sensitive changes
+- Performance-critical code
+- Architectural reviews
+
+**Usage:**
+Comment on any PR: `/matter review-max`
+
+## /matter fix
+Automated Code Fix Generation that creates a fix PR addressing all review comments from Matter AI. This eliminates manual copy-pasting and ensures accurate application of suggestions.
+
+<Frame>
+<img
+  className="block"
+  src="/images/features/matterai-review-fix.png"
+  alt="MatterAI Release Notes Command"
+/>
+</Frame>
+
+**How it works:**
+1. Fetches all review comments from Matter AI
+2. Analyzes the code and generates precise fixes
+3. Creates a new branch with all fixes applied
+4. Opens a PR targeting your original branch
+
+**Benefits:**
+- ✅ Saves 15-30 minutes per PR
+- ✅ Eliminates manual error when applying suggestions
+- ✅ Creates separate PR for safe review
+- ✅ Works with all Matter AI review types (review, review-max, review-full)
+
+**Usage:**
+Comment on any PR: `/matter fix`
+
+**Security & Safety:**
+- Fix PRs are created as separate branches - no direct commits to your branch
+- All changes are reviewable before merging
+- Original PR remains unchanged
 
 
 

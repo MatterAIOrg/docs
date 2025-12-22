@@ -94,6 +94,8 @@
               {
                 "group": "Features",
                 "pages": [
+                  "features/advanced-ai-code-review",
+                  "features/automated-code-fixes",
                   "features/security-analysis",
                   "features/code-quality",
                   "features/codebase-learnings",
