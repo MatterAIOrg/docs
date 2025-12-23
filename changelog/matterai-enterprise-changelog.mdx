@@ -4,15 +4,9 @@ tag: "latest"
 description: "Product updates and announcements for MatterAI Enterprise Self-Hosted"
 ---
 
-<Update label="v1.2.0">
+<Update label="Advanced Code Reviews">
 
 **Release Date:** December 23, 2024
-
----
-
-## 🚀 Major Features
-
-### Advanced Code Review with Agentic Tool Calling
 
 Introducing a revolutionary upgrade to the code review experience. Matter AI can now actively explore your codebase during reviews using intelligent tool calling.
 
@@ -39,9 +33,11 @@ Introducing a revolutionary upgrade to the code review experience. Matter AI can
 **Configuration:**
 Enable advanced reviews per repository via the admin dashboard under "Advanced Reviews" settings.
 
----
+</Update>
 
-### `/matter fix` Command
+<Update label="Automated Code Fixes">
+
+**Release Date:** December 23, 2024
 
 Automatically generate code fixes from review comments with a single command.
 
@@ -77,9 +73,11 @@ Automatically generate code fixes from review comments with a single command.
 />
 </Frame>
 
----
+</Update>
 
-### Repository Memory Integration
+<Update label="Repository Memory Integration">
+
+**Release Date:** December 23, 2024
 
 Leverage stored repository knowledge for context-aware code reviews.
 
@@ -107,11 +105,11 @@ Leverage stored repository knowledge for context-aware code reviews.
   <img src="/images/features/memories-used.png" alt="Repository Memory Integration" />
 </Frame>
 
----
+</Update>
 
-## ✨ New Console Features
+<Update label="LLM Logs Enhanced Filtering">
 
-### LLM Logs Enhanced Filtering
+**Release Date:** December 23, 2024
 
 The LLM Logs dashboard now includes comprehensive filtering capabilities for better observability:
 
@@ -130,7 +128,11 @@ All filters work together to provide granular insights into your LLM usage patte
   <img src="/images/enterprise/llm-logs.png" alt="LLM Logs Enhanced Filtering" />
 </Frame>
 
-### Provider Logos in LLM Logs
+</Update>
+
+<Update label="Provider Logos in LLM Logs">
+
+**Release Date:** December 23, 2024
 
 LLM log entries now display recognizable provider logos for:
 - OpenAI
@@ -140,7 +142,11 @@ LLM log entries now display recognizable provider logos for:
 
 This visual enhancement makes it easier to quickly identify which providers are being used across your organization.
 
-### Advanced Reviews Configuration
+</Update>
+
+<Update label="Advanced Reviews Configuration">
+
+**Release Date:** December 23, 2024
 
 Enterprise administrators can now configure which repositories receive advanced AI code reviews:
 
@@ -153,7 +159,11 @@ Enterprise administrators can now configure which repositories receive advanced 
   <img src="/images/enterprise/advanced-code-review-settings.png" alt="Advanced Reviews Configuration" />
 </Frame>
 
-### Estimated Time Savings Analytics
+</Update>
+
+<Update label="Estimated Time Savings Analytics">
+
+**Release Date:** December 23, 2024
 
 New analytics metrics to quantify the value of AI-assisted code reviews:
 
@@ -161,11 +171,11 @@ New analytics metrics to quantify the value of AI-assisted code reviews:
 - Integration with dashboard overview metrics
 - Helps justify ROI for enterprise AI tooling investments
 
----
+</Update>
 
-## 🎨 UI/UX Improvements
+<Update label="Refreshed Sign-Up Experience">
 
-### Refreshed Sign-Up Experience
+**Release Date:** December 23, 2024
 
 Complete redesign of the enterprise signup page:
 
@@ -177,7 +187,11 @@ Complete redesign of the enterprise signup page:
 - **Version Display** — Application version now shown during signup
 - **Enhanced Footer** — Updated branding and product information
 
-### Theme & Style Updates
+</Update>
+
+<Update label="Theme & Style Updates">
+
+**Release Date:** December 23, 2024
 
 - Updated base color palette for improved contrast and readability
 - Refined card component styling
@@ -186,16 +200,22 @@ Complete redesign of the enterprise signup page:
 - Consistent gradient border styling across components
 - Updated dashboard navbar styling
 
-### Dashboard Refinements
+</Update>
+
+<Update label="Dashboard Refinements">
+
+**Release Date:** December 23, 2024
 
 - Updated statistics cards with new iconography
 - Improved date range filter presentation
 - Enhanced PR data visualization
 - Cleaner table layouts across all views
 
----
+</Update>
 
-## 📊 Metrics Dashboard Changes
+<Update label="Metrics Dashboard Filtering">
+
+**Release Date:** December 23, 2024
 
 The LLM Metrics tab now supports filtered views:
 - Cost by Provider chart respects all active filters
@@ -203,38 +223,52 @@ The LLM Metrics tab now supports filtered views:
 - Daily Cost Trend reflects filtered data
 - Daily Request Volume reflects filtered data
 
----
+</Update>
 
-## 🔧 Technical Improvements
+<Update label="Gemini Model Updates">
 
-### Gemini Model Updates
+**Release Date:** December 23, 2024
 
 - Updated to **Gemini 3 Pro Preview** for advanced reviews
 - Updated to **Gemini 3 Flash Preview** for standard reviews
 - Improved model routing based on task complexity
 
-### Token Counting & Storage
+</Update>
+
+<Update label="Token Counting & Storage">
+
+**Release Date:** December 23, 2024
 
 - Fixed accurate token counting for all providers
 - Improved token storage for billing and analytics
 - Corrected input/output token separation
 
-### Dependency Updates
+</Update>
+
+<Update label="Dependency Updates">
+
+**Release Date:** December 23, 2024
 
 - Updated multiple core dependencies for security and performance
 - React ecosystem packages updated to latest stable versions
 - Added `@google/genai` - Google Generative AI SDK for advanced Gemini integration
 - Build configuration optimizations
 
-### Performance Optimizations
+</Update>
+
+<Update label="Performance Optimizations">
+
+**Release Date:** December 23, 2024
 
 - Optimized LLM logs data filtering with memoized computations
 - Improved chart rendering performance in metrics views
 - Reduced re-renders in settings panels
 
----
+</Update>
 
-## 🐛 Bug Fixes
+<Update label="Bug Fixes">
+
+**Release Date:** December 23, 2024
 
 - Fixed filter state persistence across tab navigation
 - Resolved chart rendering issues with empty data sets
@@ -243,9 +277,11 @@ The LLM Metrics tab now supports filtered views:
 - Standardized check run names to "Matter AI Code Review"
 - Removed duplicate check runs issue
 
----
+</Update>
 
-## 📝 Notes for Enterprise Administrators
+<Update label="Enterprise Administration Notes">
+
+**Release Date:** December 23, 2024
 
 ### Feature Flags
 No new feature flags introduced in this release.
@@ -259,9 +295,11 @@ Advanced review configurations are scoped to organization level.
 ### Environment Variables
 No new environment variables required for this release.
 
----
+</Update>
 
-## 🔒 Security
+<Update label="Security">
+
+**Release Date:** December 23, 2024
 
 This release includes routine dependency updates that address known vulnerabilities in third-party packages. SOC 2 Type II compliance maintained.
 
