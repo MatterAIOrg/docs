@@ -1,0 +1,76 @@
+---
+title: 'Prompt Caching'
+description: 'Learn how prompt caching works with Axon models to optimize token usage and reduce costs'
+---
+
+## Overview
+
+Input Prompt token caching is now live for all Axon models! This feature significantly reduces costs and improves response times by caching frequently used prompt tokens.
+
+## Key Features
+
+- **Default TTL**: 5 minutes
+- **Supported Modes**: Both streaming and non-streaming responses
+- **Automatic**: Works transparently with all Axon models
+- **Cost Reduction**: Cached tokens are billed at a reduced rate
+
+## How It Works
+
+When you send a request with similar or identical prompt content, the system automatically caches the tokenized prompt. Subsequent requests within the 5-minute TTL period will reuse the cached tokens, resulting in:
+
+- Faster response times
+- Lower token costs
+- Improved API performance
+
+## Usage Example
+
+The cached tokens are reported in the API response under the `usage.prompt_tokens_details` field:
+
+```json
+{
+    "id": "chatcmpl-954ab54b-ee3f-4199-b0a7-06457c426dc8",
+    "choices": [
+        {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "matched_stop": 151645,
+            "message": {
+                "content": "Hello. How can I assist you today?",
+                "role": "assistant",
+                "tool_calls": null
+            }
+        }
+    ],
+    "created": 1766466952,
+    "model": "axon-mini",
+    "object": "chat.completion",
+    "usage": {
+        "prompt_tokens": 25,
+        "completion_tokens": 74,
+        "total_tokens": 99,
+        "completion_tokens_details": {
+            "reasoning_tokens": 64
+        },
+        "prompt_tokens_details": {
+            "cached_tokens": 25
+        }
+    }
+}
+```
+
+## Best Practices
+
+To maximize the benefits of prompt caching:
+
+1. **Reuse System Prompts**: Keep system messages consistent across requests
+2. **Batch Similar Requests**: Send related requests within the 5-minute window
+3. **Cache-Friendly Content**: Use stable, reusable prompt components
+4. **Monitor Usage**: Track cached token metrics to optimize your integration
+
+## Benefits
+
+- **Cost Savings**: Up to 70% reduction in prompt token costs for cached content
+- **Performance**: Faster response times for cached prompts
+- **Scalability**: Better API performance under high load
+- **Transparency**: Clear visibility into cached token usage via API responses

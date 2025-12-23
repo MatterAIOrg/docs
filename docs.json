@@ -79,7 +79,8 @@
               },
               "axon-ai/pricing",
               "axon-ai/api-keys",
-              "axon-ai/rate-limits"
+              "axon-ai/rate-limits",
+              "axon-ai/prompt-caching"
             ]
           },
           {
