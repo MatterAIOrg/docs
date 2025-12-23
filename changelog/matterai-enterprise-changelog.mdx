@@ -1,0 +1,270 @@
+---
+title: "v1.2.0"
+tag: "latest"
+description: "Product updates and announcements for MatterAI Enterprise Self-Hosted"
+---
+
+<Update label="v1.2.0">
+
+**Release Date:** December 23, 2024
+
+---
+
+## 🚀 Major Features
+
+### Advanced Code Review with Agentic Tool Calling
+
+Introducing a revolutionary upgrade to the code review experience. Matter AI can now actively explore your codebase during reviews using intelligent tool calling.
+
+**What's New:**
+- **Repository Cloning & Exploration**: The AI now clones your repository and generates a directory listing to understand the full codebase structure
+- **`read_file` Tool**: AI can read files with line ranges to understand context, verify imports, and trace function calls
+- **`grep_search` Tool**: AI can search for patterns across the codebase using grep, enabling comprehensive code analysis
+- **Multi-Provider Support**: Advanced reviews work with both **Google Gemini** and **Anthropic Claude** providers
+- **Configurable Iterations**: Control how many tool calls the AI can make during analysis
+
+**Benefits:**
+- Deeper, more contextual code reviews
+- AI understands how changes affect other parts of your codebase
+- Catches cross-file issues and dependency problems
+
+<Frame>
+<img
+  className="block"
+  src="/images/features/matterai-review-max.png"
+  alt="Advanced AI Code Review Example"
+/>
+</Frame>
+
+**Configuration:**
+Enable advanced reviews per repository via the admin dashboard under "Advanced Reviews" settings.
+
+---
+
+### `/matter fix` Command
+
+Automatically generate code fixes from review comments with a single command.
+
+**Usage:**
+```bash
+/matter fix
+```
+
+**How It Works:**
+1. Collects all unresolved review comments on the PR
+2. Reads the current file contents for affected files
+3. Uses AI to generate targeted code fixes
+4. Creates a new PR with the fix branch automatically
+
+**Supported Models:**
+- Claude Sonnet 4.5 (preferred)
+- Gemini 3 Pro Preview
+- Axon Code (MatterAI)
+
+<Frame>
+<img
+  className="block"
+  src="/images/features/matterai-review-fix.png"
+  alt="Automated Code Fix Example"
+/>
+</Frame>
+
+<Frame>
+<img
+  className="block"
+  src="/images/features/matterai-review-fix-2.png"
+  alt="Automated Code Fix Example"
+/>
+</Frame>
+
+---
+
+### Repository Memory Integration
+
+Leverage stored repository knowledge for context-aware code reviews.
+
+**Features:**
+- **File-Based Memory Matching**: Memories are matched based on files changed in the PR
+- **Usage Tracking**: Automatically tracks which memories are used and how often
+- **PR Summary Display**: Shows which repository memories influenced the review
+- **Prompt Injection**: Relevant memories are injected into AI prompts for contextual reviews
+
+**Memory Analytics:**
+- `usage_count`: Track how often each memory is used
+- `last_used_at`: See when memories were last referenced
+
+**PR Summary Example:**
+```markdown
+### 📚 Repository Memories Used
+
+**1. Authentication Guidelines**
+   - *Tags:* security, auth
+   - *Files:* src/auth/*.ts
+   - *Content:* Always validate JWT tokens...
+```
+
+<Frame>
+  <img src="/images/features/memories-used.png" alt="Repository Memory Integration" />
+</Frame>
+
+---
+
+## ✨ New Console Features
+
+### LLM Logs Enhanced Filtering
+
+The LLM Logs dashboard now includes comprehensive filtering capabilities for better observability:
+
+- **Repository Filter** — Filter logs by specific repositories or by MCP Server requests
+- **Provider Filter** — Filter by LLM provider (OpenAI, Anthropic, Google/Vertex, MatterAI)
+- **Model Filter** — Filter logs by specific AI models
+- **Prompt ID Filter** — Filter by prompt identifiers for tracing specific request types
+
+All filters work together to provide granular insights into your LLM usage patterns and costs.
+
+<Frame>
+  <img src="/images/enterprise/llm-metrics.png" alt="LLM Logs Enhanced Filtering" />
+</Frame>
+
+<Frame>
+  <img src="/images/enterprise/llm-logs.png" alt="LLM Logs Enhanced Filtering" />
+</Frame>
+
+### Provider Logos in LLM Logs
+
+LLM log entries now display recognizable provider logos for:
+- OpenAI
+- Anthropic  
+- Google / Vertex AI
+- MatterAI
+
+This visual enhancement makes it easier to quickly identify which providers are being used across your organization.
+
+### Advanced Reviews Configuration
+
+Enterprise administrators can now configure which repositories receive advanced AI code reviews:
+
+- New **Advanced Reviews** settings section in the dashboard
+- Multi-repository selection via autocomplete
+- Save/update controls with loading states
+- Fetches and displays currently enabled advanced review repositories
+
+<Frame>
+  <img src="/images/enterprise/advanced-code-review-settings.png" alt="Advanced Reviews Configuration" />
+</Frame>
+
+### Estimated Time Savings Analytics
+
+New analytics metrics to quantify the value of AI-assisted code reviews:
+
+- Track estimated developer time saved through automated reviews
+- Integration with dashboard overview metrics
+- Helps justify ROI for enterprise AI tooling investments
+
+---
+
+## 🎨 UI/UX Improvements
+
+### Refreshed Sign-Up Experience
+
+Complete redesign of the enterprise signup page:
+
+- **Product Showcase Cards** — Visual cards highlighting key products:
+  - AI Code Reviews
+  - Axon Code AI Agent  
+  - Model Inference Gateway
+- **New Hero Background** — Modern, premium visual design
+- **Version Display** — Application version now shown during signup
+- **Enhanced Footer** — Updated branding and product information
+
+### Theme & Style Updates
+
+- Updated base color palette for improved contrast and readability
+- Refined card component styling
+- Enhanced input and select component borders
+- Improved sidenav visual hierarchy
+- Consistent gradient border styling across components
+- Updated dashboard navbar styling
+
+### Dashboard Refinements
+
+- Updated statistics cards with new iconography
+- Improved date range filter presentation
+- Enhanced PR data visualization
+- Cleaner table layouts across all views
+
+---
+
+## 📊 Metrics Dashboard Changes
+
+The LLM Metrics tab now supports filtered views:
+- Cost by Provider chart respects all active filters
+- Requests by Model chart respects all active filters
+- Daily Cost Trend reflects filtered data
+- Daily Request Volume reflects filtered data
+
+---
+
+## 🔧 Technical Improvements
+
+### Gemini Model Updates
+
+- Updated to **Gemini 3 Pro Preview** for advanced reviews
+- Updated to **Gemini 3 Flash Preview** for standard reviews
+- Improved model routing based on task complexity
+
+### Token Counting & Storage
+
+- Fixed accurate token counting for all providers
+- Improved token storage for billing and analytics
+- Corrected input/output token separation
+
+### Dependency Updates
+
+- Updated multiple core dependencies for security and performance
+- React ecosystem packages updated to latest stable versions
+- Added `@google/genai` - Google Generative AI SDK for advanced Gemini integration
+- Build configuration optimizations
+
+### Performance Optimizations
+
+- Optimized LLM logs data filtering with memoized computations
+- Improved chart rendering performance in metrics views
+- Reduced re-renders in settings panels
+
+---
+
+## 🐛 Bug Fixes
+
+- Fixed filter state persistence across tab navigation
+- Resolved chart rendering issues with empty data sets
+- Fixed select component dropdown arrow alignment
+- Corrected toast notification z-index layering
+- Standardized check run names to "Matter AI Code Review"
+- Removed duplicate check runs issue
+
+---
+
+## 📝 Notes for Enterprise Administrators
+
+### Feature Flags
+No new feature flags introduced in this release.
+
+### Audit Logging
+LLM logs now capture `prompt_id` for enhanced audit trail capabilities.
+
+### Multi-tenant Considerations
+Advanced review configurations are scoped to organization level.
+
+### Environment Variables
+No new environment variables required for this release.
+
+---
+
+## 🔒 Security
+
+This release includes routine dependency updates that address known vulnerabilities in third-party packages. SOC 2 Type II compliance maintained.
+
+*For questions or support, contact your Matter AI account representative.*
+
+</Update>

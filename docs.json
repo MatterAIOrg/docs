@@ -258,7 +258,13 @@
                       "enterprise/self-hosted-helm-chart"
                     ]
                   },
-                  "enterprise/rbac"
+                  "enterprise/rbac",
+                  {
+                    "group": "Enterprise Changelog",
+                    "pages": [
+                      "changelog/matterai-enterprise-changelog"
+                    ]
+                  }
                 ]
               }
             ]
