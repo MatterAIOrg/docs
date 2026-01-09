@@ -21,7 +21,7 @@
   </p>
   <p>
 
-![Matter Og Image](https://res.cloudinary.com/dxvbskvxm/image/upload/v1759507963/og-image-matterai_dfxhg9.webp)
+![Matter Og Image](https://res.cloudinary.com/dxvbskvxm/image/upload/v1767928546/og-image-matter_uglj27.png)
 
   </p>
 </div>

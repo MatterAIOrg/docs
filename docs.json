@@ -1,8 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "aspen",
-  "name": "MatterAI Documentation | Universal AI Super Intelligence",
-  "description": "MatterAI is Universal AI Super Intelligence for general purpose tasks, code generation and deep research",
+  "name": "MatterAI Documentation | AI Super Intelligence",
+  "description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
   "colors": {
     "primary": "#008a4a",
     "light": "#3AFFA3",
@@ -19,14 +19,14 @@
   },
   "seo": {
     "metatags": {
-      "og:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1759507963/og-image-matterai_dfxhg9.webp",
-      "og:title": "MatterAI Documentation | Universal AI Super Intelligence",
-      "og:description": "MatterAI is Universal AI Super Intelligence for general purpose tasks, code generation and deep research",
+      "og:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1767928546/og-image-matter_uglj27.png",
+      "og:title": "MatterAI Documentation | AI Super Intelligence",
+      "og:description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
       "og:url": "https://docs.matterai.so",
       "twitter:title": "MatterAI Documentation | Universal AI Super Intelligence",
-      "twitter:description": "MatterAI is Universal AI Super Intelligence for general purpose tasks, code generation and deep research",
-      "twitter:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1759507963/og-image-matterai_dfxhg9.webp",
-      "twitter:url": "https://x.com/matteraidev"
+      "twitter:description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
+      "twitter:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1767928546/og-image-matter_uglj27.png",
+      "twitter:url": "https://x.com/matteraiorg"
     }
   },
   "search": {
