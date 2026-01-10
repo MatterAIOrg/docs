@@ -4,12 +4,12 @@
   "name": "MatterAI Documentation | AI Super Intelligence",
   "description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
   "colors": {
-    "primary": "#008a4a",
-    "light": "#3AFFA3",
+    "primary": "#1ebdc2",
+    "light": "#c4fdff",
     "dark": "#05050A"
   },
   "fonts": {
-    "family": "Geist"
+    "family": "Jetbrains Mono"
   },
   "contextual": {
     "options": [
@@ -346,6 +346,11 @@
     "global": {
       "anchors": [
         {
+          "anchor": "Install Axon Code",
+          "href": "https://matterai.so/axon-vscode",
+          "icon": "code"
+        },
+        {
           "anchor": "Blog",
           "href": "https://matterai.so/blog",
           "icon": "newspaper"
@@ -356,9 +361,9 @@
           "icon": "discord"
         },
         {
-          "anchor": "Github",
-          "href": "https://github.com/MatterAIOrg/matter-ai",
-          "icon": "github"
+          "anchor": "Reddit",
+          "href": "https://www.reddit.com/r/matter_ai/",
+          "icon": "reddit"
         },
         {
           "anchor": "Status Page",
