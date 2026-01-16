@@ -3,6 +3,61 @@ title: "Axon VSCode Extension Changelog"
 description: "Latest updates and improvements for Axon VSCode Extension"
 ---
 
+<Update label="January 14, 2026">
+## v5.0.0
+
+🚀 **Axon Code v5 is Here!**
+
+### ✨ Major Highlights
+
+🧠 **Auto-Generated Memories**
+Axon Code now generates and references memories from past chats, ensuring previously used context is instantly recalled when building or updating your codebase.
+
+🔧 **Revamped Context Agents & File Edits**
+Completely redesigned tools (read, edit, search, list) with dramatically reduced error rates for more reliable code modifications.
+
+🏢 **Enterprise Code Review Support**
+Full support for self-deployed platforms with enhanced AI code review capabilities.
+
+💎 **Major UI Overhaul**
+Completely refreshed interface with improved auth flow and review-only mode.
+
+### Added
+
+- Auto-generated memories for past chats with quick context recall
+- Revamped context agents and file edit tools (read, edit, search, list) with reduced error rates
+- Enterprise code review support for self-deployed platforms
+- Major UI improvements across the board
+- Enhanced auth flow with review-only mode
+- Line counter tracking (lines added, updated, deleted)
+- "View Diff" button to see pending changes in VS Code editor
+- Enhanced file edit review with accept/reject functionality
+- File changes list persists on task abortion
+- Elapsed time tracking for reasoning blocks ("Thinking for Xs")
+- Animated loading indicators with MatterProgressIndicator component
+- Context window usage tracking
+- Credits usage display on hover
+- Chat title fetching and display
+- Enhanced webview message handling
+- Streamlined chat interface with better UX
+- Settings UI cleanup
+- Updated translations for multiple languages
+- Added memories locale files for better i18n support
+
+### Changed
+
+- Improved file edit and code review workflows
+- Enhanced model provider integration
+- Better error handling and UI consistency
+- Improved cancel button functionality
+
+### Fixed
+
+- Fixed message queuing after rejecting exec_cmd tool
+- Fixed stream tool calling issues when tools got stuck
+- Notify LLM if files have been changed by the user post its own edits
+</Update>
+
 <Update label="December 20, 2025">
 ## v4.204.1
 
