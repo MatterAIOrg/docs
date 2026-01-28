@@ -318,18 +318,6 @@
         ]
       },
       {
-        "tab": "AI Gateways",
-        "pages": [
-          {
-            "group": "LLM Gateways",
-            "pages": [
-              "intergrate-axon-llm-gateway/portkey-ai",
-              "intergrate-axon-llm-gateway/litellm-sdk"
-            ]
-          }
-        ]
-      },
-      {
         "tab": "Changelog",
         "groups": [
           {
