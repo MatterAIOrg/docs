@@ -1,10 +1,7 @@
 ---
-title: GitLab Code Reviews
+title: Install MatterAI On GitLab
 icon: "gitlab"
-description: "Install MatterAI on GitLab for AI Code Reviews and more"
-og:title: "AI Code Reviews | MatterAI Documentation"
-og:description: "AI Code Reviews by MatterAI to ship better code faster with AI-powered reviews that understand your codebase"
-og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1761739316/code-reviews-og-img_xhyuqv.png"
+description: 'Install MatterAI on GitLab for AI Code Reviews and more'
 ---
 
 <Note>All Pricing and Features are same on GitLab as on Github</Note>
@@ -19,136 +16,73 @@ MatterAI seamlessly integrates with GitLab to enhance your development workflow 
 
 Follow these steps to integrate MatterAI with your GitLab repositories:
 
-## Step 1: Choose Your GitLab Access Token Type
-
-To enable MatterAI to interact with your GitLab repositories, you'll need to provide an access token with appropriate permissions:
-
-- **Personal Access Token (PAT)**: Create a dedicated MatterAI service account and generate a PAT for it
-- **Group Access Token**: For GitLab Premium/Ultimate users, generate a token that automatically creates a bot user
-
-## Step 2: Set Up a Personal Access Token
+## Step 1: Create a Service Account
 
 We recommend creating a dedicated service account for MatterAI with these best practices:
 
 1. Create a new **GitLab user specifically for MatterAI integration**
-2. Name the account **matterai-yourdomain** for easy identification
-3. Use a **dedicated email address **for this account
+2. Name the account **matter-ai** for easy identification
+3. Use a **dedicated email address** for this account
 4. Upload the **MatterAI logo** as the profile picture. You can find it here: [https://raw.githubusercontent.com/GravityCloudAI/public-assets/refs/heads/main/logos/matter-logo.svg](https://raw.githubusercontent.com/GravityCloudAI/public-assets/refs/heads/main/logos/matter-logo.svg)
-5. Ensure this user has at least **Developer access** to your target repositories
+5. Ensure this user has at least **Maintainer access** to your target repositories
 
-<Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-user.png"
-    alt="Setting up MatterAI service account"
-  />
-</Frame>
-
-## Step 3: Generate Your Personal Access Token
+## Step 2: Generate Personal Access Token
 
 1. Log in using the dedicated MatterAI service account
-2. Click your avatar on the left sidebar
-3. Select **Edit Profile**
-4. Choose **Access Tokens** from the left menu
-5. Click **Add New Token**
-6. Enter a descriptive name and set an expiration date
-7. Select the following scopes: **api, read_api, read_user**
-8. Click **Create Personal Access Token**
-9. Save the token securely (it will only be displayed once)
+2. Click your avatar on the left sidebar and select **Edit Profile**
+3. Choose **Access Tokens** from the left menu
+4. Click **Add New Token**
+5. Enter a descriptive name and set an expiration date
+6. Select the following scopes: **api, read_repository**
+7. Click **Create Personal Access Token**
+8. Save the token securely
 
 <Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-pat.png"
-    alt="Generating Personal Access Token"
-  />
+  <img src="/images/connectors/gitlab/gitlab-matterai-setup-0.png" alt="Generating Personal Access Token" />
 </Frame>
 
 <Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-pat-scopes.png"
-    alt="Generating Personal Access Token"
-  />
+  <img src="/images/connectors/gitlab/gitlab-matterai-setup-1.png" alt="Generating Personal Access Token Scopes" />
 </Frame>
 
-<Note>Remember that personal access tokens have expiration dates</Note>
-
-### Alternative: Using Group Access Tokens
-
-<Warning>
-  GitLab restricts this option to users on the Premium or Ultimate tiers.
-</Warning>
-
-For GitLab Premium or Ultimate users, Group Access Tokens provide a streamlined option:
-
-1. Navigate to your target group
-2. Select **Settings** from the left sidebar
-3. Choose **Access Tokens** within Settings
-4. Create a Group Access Token with the `api` scope
-5. Ensure Developer Access is granted
-
-<Note>
-  Group Access Tokens are limited to the specific group where created. For
-  multiple groups, you'll need separate tokens for each.
-</Note>
-
-<Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-gat.png"
-    alt="Generating Group Access Token"
-  />
-</Frame>
-
-<Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-gat-scopes.png"
-    alt="Generating Group Access Token"
-  />
-</Frame>
-
-## Step 4: Setup MatterAI Webhook
-
-### GitLab Configuration
-
-<Warning>
-  GitLab restricts Project-level Webhooks to users on the Premium or Ultimate
-  tiers.
-</Warning>
-
-1. Navigate to GitLab Webhooks for your Project. **GitLab** -> **Projects** -> **Your Project** -> **Settings** -> **Webhooks**
-2. Click on **Add a Webhook**
-3. Enter the webhook name and description. We recommend adding name as **matterai** and description as **MatterAI Webhook for AI Code Reviews**
-4. Enter the following URL: **https://api.matterai.so/api/v1/gitlab/webhook**
-5. Generate a **Secret Token** and copy it, this will be used to store in MatterAI Connectors
-6. Select the **T**riggers for the Webhook**, MatterAI requires three triggers: **Push events**, **Merge Request events** and **Comments\*\*
-7. Save the Webhook
-
-<Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-webhook.png"
-    alt="Setting up MatterAI service account"
-  />
-</Frame>
-
-<Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-webhook-scope.png"
-    alt="Setting up MatterAI service account"
-  />
-</Frame>
-
-### MatterAI Configuration
+## Step 3: Connect to MatterAI
 
 1. Navigate to **MatterAI** -> **Connectors** -> **GitLab** and click on **Connect**. Console URL: [https://app.matterai.so/connectors](https://app.matterai.so/connectors)
-2. Enter the **GitLab Access Token** and **Webhook Secret Token** in the form.
-3. If you have self-hosted GitLab, enter then add **Self-Hosted GitLab URL** in the form. MatterAI IPs can be whitelisted in your network.
-4. Click on **Save**
-5. On GitLab, you can click on **Test webhook** with any of the event to confirm the webhook is working.
-6. Your GitLab integration is now ready to use!
+2. Enter your **Personal Access Token** in the provided field.
+3. If you are using a self-hosted instance, enter your **Self-Hosted GitLab URL**.
+4. Click **Save**.
 
 <Frame>
-  <img
-    src="/images/connectors/gitlab/matterai-gitlab.png"
-    alt="Setting up MatterAI service account"
-  />
+<img src="/images/connectors/gitlab/gitlab-matterai-setup-2.png" alt="Connecting GitLab in MatterAI" />
+</Frame>
+
+## Step 4: Manage Projects
+
+1. Once connected, click on **Manage Projects** (or **Fetch Groups**).
+2. MatterAI will retrieve all available GitLab Projects/Groups associated with your token.
+
+<Frame>
+  <img src="/images/connectors/gitlab/gitlab-matterai-setup-3.png" alt="Fetching GitLab Groups" />
+</Frame>
+
+## Step 5: Enable Projects
+
+1. Locate the project or group you wish to enable.
+2. Toggle the switch to enable it. You can enable specific projects or an entire group.
+3. MatterAI will automatically set up the required webhooks for all enabled projects.
+
+<Frame>
+  <img src="/images/connectors/gitlab/gitlab-matterai-setup-4.png" alt="Enabling GitLab Projects" />
+</Frame>
+
+<Note>
+This automated flow works on all GitLab tiers (Free, Premium, Ultimate) and fully supports self-hosted GitLab instances. Use the toggle to easily manage MatterAI integration for your groups.
+</Note>
+
+## Done, Your Webhooks are auto-configured!
+
+<Frame>
+  <img src="/images/connectors/gitlab/gitlab-matterai-setup-5.png" alt="Enabling GitLab Projects" />
 </Frame>
 
 ## GitLab Code Reviews
@@ -158,10 +92,7 @@ For GitLab Premium or Ultimate users, Group Access Tokens provide a streamlined 
 Get PR summaries in your GitLab merge requests, always upto date on all the commits.
 
 <Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-merge-request-summary.png"
-    alt="Setting up MatterAI service account"
-  />
+  <img src="/images/connectors/gitlab/gitlab-merge-request-summary.png" alt="Setting up MatterAI service account" />
 </Frame>
 
 ### AI Merge Review Threads
@@ -169,8 +100,8 @@ Get PR summaries in your GitLab merge requests, always upto date on all the comm
 Get PR summaries in your GitLab merge requests with issues, fix and code fix suggestion that you can apply with 1-click.
 
 <Frame>
-  <img
-    src="/images/connectors/gitlab/gitlab-merge-request-thread.png"
-    alt="Setting up MatterAI service account"
-  />
+  <img src="/images/connectors/gitlab/gitlab-merge-request-thread.png" alt="Setting up MatterAI service account" />
 </Frame>
+
+
+
