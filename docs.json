@@ -56,12 +56,12 @@
             ]
           },
           {
-            "group": "Axon AI Coding Agent",
-            "icon": "robot",
+            "group": "Orbital App",
+            "icon": "apple",
             "pages": [
-              "axon-agent/overview",
-              "cli/axon-code-cli",
-              "axon-agent/pricing"
+              "orbital/install",
+              "orbital/overview",
+              "orbital/pricing"
             ]
           },
           {
@@ -291,8 +291,7 @@
               {
                 "group": "Ticketing",
                 "pages": [
-                  "connectors/Linear",
-                  "connectors/Jira"
+                  "connectors/jira"
                 ]
               }
             ]
@@ -323,7 +322,7 @@
           {
             "group": "MatterAI Product Updates",
             "pages": [
-              "changelog/axon-code-changelog",
+              "changelog/orbital-changelog",
               "changelog/axon-models-changelog",
               "changelog/ai-code-reviews-changelog"
             ]
@@ -334,9 +333,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Install Axon Code",
-          "href": "https://www.matterai.so/axon-ai-coding-agent",
-          "icon": "code"
+          "anchor": "Download Orbital",
+          "href": "https://www.matterai.so",
+          "icon": "apple"
         },
         {
           "anchor": "Blog",
@@ -378,8 +377,8 @@
         "href": "https://matterai.so/contact"
       },
       {
-        "label": "Github",
-        "href": "https://github.com/MatterAIOrg/matter-ai"
+        "label": "Download",
+        "href": "https://matterai.so"
       }
     ],
     "primary": {

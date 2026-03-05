@@ -1,0 +1,349 @@
+---
+title: "Orbital Changelog"
+description: "Latest updates and improvements for Orbital"
+---
+
+<Update label="January 14, 2026">
+## v5.0.0
+
+🚀 **Orbital v5 is Here!**
+
+### ✨ Major Highlights
+
+🧠 **Auto-Generated Memories**
+Orbital now generates and references memories from past chats, ensuring previously used context is instantly recalled when building or updating your codebase.
+
+🔧 **Revamped Context Agents & File Edits**
+Completely redesigned tools (read, edit, search, list) with dramatically reduced error rates for more reliable code modifications.
+
+🏢 **Enterprise Code Review Support**
+Full support for self-deployed platforms with enhanced AI code review capabilities.
+
+💎 **Major UI Overhaul**
+Completely refreshed interface with improved auth flow and review-only mode.
+
+### Added
+
+- Auto-generated memories for past chats with quick context recall
+- Revamped context agents and file edit tools (read, edit, search, list) with reduced error rates
+- Enterprise code review support for self-deployed platforms
+- Major UI improvements across the board
+- Enhanced auth flow with review-only mode
+- Line counter tracking (lines added, updated, deleted)
+- "View Diff" button to see pending changes in VS Code editor
+- Enhanced file edit review with accept/reject functionality
+- File changes list persists on task abortion
+- Elapsed time tracking for reasoning blocks ("Thinking for Xs")
+- Animated loading indicators with MatterProgressIndicator component
+- Context window usage tracking
+- Credits usage display on hover
+- Chat title fetching and display
+- Enhanced webview message handling
+- Streamlined chat interface with better UX
+- Settings UI cleanup
+- Updated translations for multiple languages
+- Added memories locale files for better i18n support
+
+### Changed
+
+- Improved file edit and code review workflows
+- Enhanced model provider integration
+- Better error handling and UI consistency
+- Improved cancel button functionality
+
+### Fixed
+
+- Fixed message queuing after rejecting exec_cmd tool
+- Fixed stream tool calling issues when tools got stuck
+- Notify LLM if files have been changed by the user post its own edits
+</Update>
+
+<Update label="December 20, 2025">
+## v4.204.1
+
+### Added
+
+- CLI authentication wizard with browser-based OAuth flow
+- Browser authentication utilities for secure token management
+- Welcome message utilities for CLI user onboarding
+
+### Changed
+
+- Refactored AcceptRejectButtons component for improved multi-edit handling
+- Enhanced ChatTextArea with better cancel button functionality
+- Updated ChatView component for improved message queue management
+- Improved Logo component with better styling and responsiveness
+- Enhanced AuthWizard with comprehensive authentication flow
+- Updated CLI package configuration and validation
+
+### Fixed
+
+- Fixed code paths return value issue in AuthWizard
+- Improved cancel button UI and functionality
+- Enhanced CLI authentication initialization process
+</Update>
+
+<Update label="December 20, 2025">
+## v4.204.0
+
+### Added
+
+- Support for axon-code-2-preview model in OpenRouter provider
+- Enhanced file edit review controller with better diff handling
+- Improved UI refactors across multiple components
+
+### Changed
+
+- Refactored kilocode-models configuration for better model management
+- Updated useOpenRouterModelProviders hook for enhanced provider integration
+- Enhanced FileEditReviewController for improved file edit reviews
+- Improved QueuedMessages component for better message handling
+- Updated CSS styling for consistent UI appearance
+- Enhanced slash commands utilities for better command processing
+
+### Fixed
+
+- Cleaned up AI code reviews card for better user experience
+- Fixed various UI inconsistencies across components
+- Improved error handling in webview message handler
+</Update>
+
+<Update label="December 19, 2025">
+## v4.203.0
+
+### Added
+
+- Enhanced chat text area with improved mention chip functionality
+- New mention chip demo component for better user interaction
+
+### Changed
+
+- Refactored ChatTextArea component for better performance and maintainability
+- Updated ChatRow component with streamlined UI elements
+- Improved CodeAccordian component for enhanced code display
+- Enhanced useOpenRouterModelProviders hook for better model management
+- Updated prettyModelName utility for improved model name formatting
+- Refined KiloTaskHeader component with better task management
+- Improved GhostServiceSettings component for enhanced configuration
+
+### Fixed
+
+- Better handling of chat text area interactions
+- Improved mention chip display and functionality
+- Enhanced UI cleanup and consistency across components
+</Update>
+
+<Update label="December 19, 2025">
+## v4.203.0
+
+### Added
+
+- Enhanced chat text area with improved mention chip functionality
+- New mention chip demo component for better user interaction
+
+### Changed
+
+- Refactored ChatTextArea component for better performance and maintainability
+- Updated ChatRow component with streamlined UI elements
+- Improved CodeAccordian component for enhanced code display
+- Enhanced useOpenRouterModelProviders hook for better model management
+- Updated prettyModelName utility for improved model name formatting
+- Refined KiloTaskHeader component with better task management
+- Improved GhostServiceSettings component for enhanced configuration
+
+### Fixed
+
+- Better handling of chat text area interactions
+- Improved mention chip display and functionality
+- Enhanced UI cleanup and consistency across components
+</Update>
+
+<Update label="December 18, 2025">
+## v4.202.0
+
+### Added
+- New utilities for generating unified diffs (`buildFileEditDiff`, `computeDiffStats`) and classifying file icons (`getFileIconClass`).
+- `context` prop to `ErrorRow` for displaying additional error context.
+- `headerContent` prop to `CodeAccordian` for custom header rendering.
+
+### Changed
+- **Revamped Error Display:** Introduced a compact, single-line error display with an interactive info icon that reveals full details in a tooltip.
+- **Enhanced File Edit Viewer:** Significantly improved the `fileEdit` display in chat, now showing unified diffs, line-by-line additions/deletions, and a more detailed header with file path and diff statistics.
+- **Improved Batch File Permission UI:** Updated the UI for batch file permissions, including better display of file paths and line snippets.
+- **Redesigned Accept/Reject Buttons:** Overhauled the UI for accepting/rejecting file changes, featuring an expandable list of affected files with individual diff statistics and a consolidated action footer.
+- **General UI/Styling Refinements:** Applied various styling and layout improvements across `ToolUseBlock`, `ToolUseBlockHeader`, `ModelSelector`, and `CodeAccordian` components for a cleaner user experience.
+
+### Fixed
+- Corrected line snippet formatting for file paths in `BatchFilePermission` and `ChatRow`.
+- Implemented click-outside-to-close functionality for the new error tooltip in `ErrorRow`.
+- Improved accessibility with better keyboard navigation support.
+</Update>
+
+<Update label="December 16, 2025">
+## v4.201.0
+
+### Added
+- Enhanced file edit review functionality with improved user experience
+- Better webview message handling for file edit operations
+
+### Changed
+- Improved file edit review interface with refined accept/reject buttons
+- Updated ChatTextArea component for better user interaction
+- Enhanced OpenRouter provider integration
+- Streamlined UI components for improved consistency
+- Updated translations for ar, ca, cs, de, es, fr, hi, id, it, ja, ko, nl, pl, pt-BR, ru, th, tr, uk, vi, zh-CN and zh-TW
+
+### Fixed
+- Better handling of file edit review edge cases
+- Improved localization support for chat components
+</Update>
+
+<Update label="December 15, 2025">
+## v4.200.0
+
+### Added
+- New file edit review system with accept/reject functionality
+- Enhanced monthly quota management within chat interface
+- Improved mentions cleanup and handling
+- New AcceptRejectButtons component for better user interaction
+
+### Changed
+- Updated UI components across dialogs, dropdowns, popovers, and selects
+- Enhanced chat interface with improved user experience
+- Refined chat row component for better readability
+- Updated tool use block styling for improved visual consistency
+- Streamlined chat message layout and interactions
+
+### Fixed
+- Better handling of file edit operations
+- Improved quota tracking and display
+- Enhanced error handling in chat interface
+</Update>
+
+<Update label="December 7, 2025">
+## v4.123.1
+
+### Changed
+- Refined chat UI components with improved styling and consistency
+- Updated todo list display with better iconography using CheckCircle components
+- Enhanced timestamp display with improved font sizing
+- Streamlined chat message layout by removing unnecessary borders
+- Improved color scheme consistency across UI components
+- Updated font weights and sizes for better visual hierarchy
+
+### Fixed
+- Better handling of todo list status indicators
+- Improved color variable references for consistent theming
+</Update>
+
+<Update label="December 3, 2025">
+## v4.123.0
+
+### Added
+- Enhanced chat interface with improved user experience
+- Cleaner message display and layout optimization
+
+### Changed
+- Refined chat row component for better readability
+- Updated tool use block styling for improved visual consistency
+- Enhanced internationalization support for chat components
+
+### Fixed
+- Improved message formatting and spacing
+- Better handling of long messages in chat interface
+</Update>
+
+<Update label="December 3, 2025">
+## v4.122.0
+
+### Added
+- Enhanced credit management system with improved warnings
+- Better error handling for insufficient credit scenarios
+- Comprehensive test coverage for error utilities
+
+### Changed
+- Updated credit warning messages to be more user-friendly
+- Improved low credit warning UI components
+- Enhanced error messaging for better user guidance
+
+### Fixed
+- Better handling of credit limit scenarios
+- Improved error message display and formatting
+</Update>
+
+<Update label="November 30, 2025">
+## v4.121.0
+
+### Added
+- Refined codebase search functionality with improved accuracy
+- Enhanced search result filtering and scoring
+- Better integration with codebase indexing system
+
+### Changed
+- Optimized search result limits (reduced from 200 to 5 max results)
+- Improved search score thresholds (minimum score: 0.5)
+- Enhanced model provider integration
+- Streamlined codebase search UI components
+
+### Fixed
+- Better handling of search result pagination
+- Improved search result display formatting
+- Enhanced model selection interface
+</Update>
+
+<Update label="November 27, 2025">
+## v4.120.0
+
+### Added
+- Complete codebase indexing system with backend integration
+- Vector store migration to backend services
+- Enhanced embedding endpoint functionality
+- Improved package cleanup and optimization
+
+### Changed
+- Migrated vector store operations to backend for better performance
+- Refactored codebase indexing architecture for scalability
+- Enhanced UI components for better user experience
+- Improved model provider configurations
+
+### Fixed
+- Resolved embedding endpoint connectivity issues
+- Fixed codebase indexing performance bottlenecks
+- Enhanced error handling in vector store operations
+</Update>
+
+<Update label="November 20, 2025">
+## v4.119.0
+
+### Added
+- Hardcoded model IDs for improved Axon integration
+- Enhanced tool optimization for better performance
+- Credit usage display per model for better cost tracking
+- Improved model selection interface
+
+### Changed
+- Optimized API calls to reduce latency
+- Enhanced model provider architecture
+- Improved credit management and display
+- Streamlined tool execution pipeline
+
+### Fixed
+- Better handling of model selection edge cases
+- Improved credit tracking accuracy
+- Enhanced error handling in model provider operations
+</Update>
+
+<Update label="November 13, 2025">
+## v4.118.0
+
+### Added
+- Initial release with core functionality
+- Basic chat interface and model integration
+- Foundational codebase indexing capabilities
+
+### Features
+- AI-powered code assistance
+- Multi-model support through OpenRouter
+- Basic autocomplete and code suggestions
+- Initial marketplace integration
+</Update>
