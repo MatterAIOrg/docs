@@ -12,10 +12,7 @@
     "family": "Jetbrains Mono"
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view"
-    ]
+    "options": ["copy", "view"]
   },
   "seo": {
     "metatags": {
@@ -50,19 +47,12 @@
           {
             "group": "Getting Started",
             "icon": "rocket",
-            "pages": [
-              "introduction",
-              "quick-start"
-            ]
+            "pages": ["introduction", "quick-start"]
           },
           {
             "group": "Orbital App",
             "icon": "apple",
-            "pages": [
-              "orbital/install",
-              "orbital/overview",
-              "orbital/pricing"
-            ]
+            "pages": ["orbital/install", "orbital/overview", "orbital/pricing"]
           },
           {
             "group": "LLM Models and Pricing",
@@ -71,11 +61,7 @@
               "axon-overview",
               {
                 "group": "Models List",
-                "pages": [
-                  "axon",
-                  "axon-mini",
-                  "axon-code"
-                ]
+                "pages": ["axon", "axon-mini", "axon-code"]
               },
               "axon-ai/pricing",
               "axon-ai/api-keys",
@@ -261,9 +247,7 @@
                   "enterprise/rbac",
                   {
                     "group": "Enterprise Changelog",
-                    "pages": [
-                      "changelog/matterai-enterprise-changelog"
-                    ]
+                    "pages": ["changelog/matterai-enterprise-changelog"]
                   }
                 ]
               }
@@ -283,16 +267,11 @@
               },
               {
                 "group": "Team Messengers",
-                "pages": [
-                  "connectors/slack",
-                  "connectors/ms-teams"
-                ]
+                "pages": ["connectors/slack", "connectors/ms-teams"]
               },
               {
                 "group": "Ticketing",
-                "pages": [
-                  "connectors/jira"
-                ]
+                "pages": ["connectors/jira"]
               }
             ]
           }
@@ -303,9 +282,7 @@
         "pages": [
           {
             "group": "Inference",
-            "pages": [
-              "api-reference/endpoint/completions"
-            ]
+            "pages": ["api-reference/endpoint/completions"]
           },
           {
             "group": "Models",
@@ -361,8 +338,8 @@
     }
   },
   "logo": {
-    "light": "/logo/logo-light.svg",
-    "dark": "/logo/logo-dark.svg"
+    "light": "/logo/matter-ai-logo-dark.svg",
+    "dark": "/logo/matter-ai-logo.svg"
   },
   "background": {
     "color": {
