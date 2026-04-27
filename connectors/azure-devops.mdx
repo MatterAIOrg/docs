@@ -1,0 +1,192 @@
+---
+title: Install MatterAI On Azure DevOps
+icon: "microsoft"
+description: "Install MatterAI on Azure DevOps for AI Code Reviews and more"
+---
+
+<Note>All Pricing and Features are same on Azure DevOps as on GitHub</Note>
+
+# MatterAI Azure DevOps Integration
+
+MatterAI seamlessly integrates with Azure DevOps to enhance your development workflow by:
+
+- Automatically initiating AI-powered code reviews for new pull requests
+- Displaying intelligent review comments directly within pull requests
+- Providing real-time assistance through the MatterAI integration
+
+Follow these steps to integrate MatterAI with your Azure DevOps repositories:
+
+## Step 1: Create a Personal Access Token
+
+1. Log in to your Azure DevOps organization
+2. Click on your profile picture in the top right corner and select **Personal Access Tokens**
+3. Click **+ New Token**
+4. Enter a descriptive name (e.g., "MatterAI Integration")
+5. Set an expiration date for the token
+6. Select the organization where you want to use this token
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-0.png"
+    alt="Creating Personal Access Token"
+  />
+</Frame>
+
+## Step 2: Configure Token Scopes
+
+Select the following scopes for your Personal Access Token:
+
+- **Build**: Read & Execute
+- **Code**: Read & Write
+- **Pull Request Threads**: Read & Write
+- **Project and Team**: Read
+- **User Profile**: Read
+- **Work Items**: Read & Manage
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-1.png"
+    alt="Configuring Token Scopes"
+  />
+</Frame>
+
+<Note>
+  Make sure to copy and securely save your Personal Access Token immediately
+  after creation, as it will not be shown again.
+</Note>
+
+## Step 3: Connect to MatterAI
+
+1. Navigate to **MatterAI** -> **Connectors** -> **Azure DevOps** and click on **Connect**. Console URL: [https://app.matterai.so/connectors](https://app.matterai.so/connectors)
+2. Enter your **Personal Access Token** in the provided field
+3. Enter your **Azure DevOps Organization URL** (e.g., `https://dev.azure.com/your-organization`)
+4. Click **Save**
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-2.png"
+    alt="Connecting Azure DevOps in MatterAI"
+  />
+</Frame>
+
+## Step 4: Test Connection and Manage Projects
+
+1. Once connected, click on **Test Connection** to verify the integration is working properly
+2. After successful connection, click on **Manage Projects** to view available repositories
+3. MatterAI will retrieve all Azure DevOps projects and repositories associated with your token
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-3.png"
+    alt="Testing Connection and Managing Projects"
+  />
+</Frame>
+
+## Step 5: Configure Service Hooks
+
+MatterAI requires Service Hooks to receive events from Azure DevOps:
+
+1. The integration will automatically configure the necessary service hooks
+2. These hooks notify MatterAI when pull requests are created or updated
+3. Ensure your organization allows service hook creation for the integration
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-4.png"
+    alt="Configuring Service Hooks"
+  />
+</Frame>
+
+## Step 6: Select Repositories
+
+1. Browse through your Azure DevOps projects
+2. Select the specific repositories you want to enable for AI code reviews
+3. You can enable multiple repositories across different projects
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-5.png"
+    alt="Selecting Repositories"
+  />
+</Frame>
+
+## Step 7: Enable Projects
+
+1. Toggle the switch to enable MatterAI for each selected repository
+2. MatterAI will automatically configure the required service hooks for all enabled repositories
+3. The integration is now active and will process new pull requests
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-6.png"
+    alt="Enabling Projects"
+  />
+</Frame>
+
+<Note>
+  This automated flow works on all Azure DevOps service tiers and supports both
+  cloud-hosted and self-hosted Azure DevOps Server instances.
+</Note>
+
+## Done, Your Integration is Complete!
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-7.png"
+    alt="Integration Complete"
+  />
+</Frame>
+
+## Azure DevOps Code Reviews
+
+### AI Pull Request Summary
+
+Get comprehensive PR summaries in your Azure DevOps pull requests, always up to date with all the commits and changes.
+
+MatterAI analyzes the entire pull request diff and provides:
+
+- Overview of changes
+- Key modifications summary
+- Potential issues and suggestions
+- Code quality insights
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-8.png"
+    alt="Creating Personal Access Token"
+  />
+</Frame>
+
+### AI Review Comments
+
+Receive intelligent code review comments directly in your Azure DevOps pull requests with:
+
+- **Issue Detection**: Identify bugs, security vulnerabilities, and code smells
+- **Fix Suggestions**: Get specific recommendations for improvements
+- **One-Click Apply**: Apply suggested code fixes with a single click
+- **Best Practices**: Learn about language-specific and framework-specific best practices
+
+<Frame>
+  <img
+    src="/images/connectors/azure-devops/matterai-azure-devop-integration-9.png"
+    alt="Creating Personal Access Token"
+  />
+</Frame>
+
+### Security Analysis
+
+MatterAI performs comprehensive security scanning on your Azure DevOps pull requests:
+
+- Detects common security vulnerabilities (OWASP Top 10)
+- Identifies hardcoded secrets and credentials
+- Flags insecure dependencies
+- Provides remediation guidance
+
+### Code Quality
+
+Improve your codebase quality with AI-powered insights:
+
+- Performance optimization suggestions
+- Code complexity analysis
+- Maintainability recommendations
+- Test coverage insights

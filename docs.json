@@ -262,6 +262,7 @@
                 "pages": [
                   "connectors/github",
                   "connectors/gitlab",
+                  "connectors/azure-devops",
                   "connectors/atlassian-bitbucket"
                 ]
               },
