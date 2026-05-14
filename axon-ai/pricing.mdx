@@ -6,15 +6,21 @@ description: "Pricing for Axon AI models"
 
 ## Pricing and Comparison
 
-| Model | Input Price (per 1M tokens) | Output Price (per 1M tokens) | Context Window Size | Max Output Tokens |
-|-------|-----------------------------|-----------------------------|--------------------|------------------|
-| Axon 1 | $1.0 | $4.0 | 256K tokens | 32,768 |
-| Axon Mini 1 | $0.25 | $1.0 | 256K tokens | 16,384 |
-| Axon Code 1 | $1.0 | $4.0 | 256K tokens | 32,768 |
+| Model         | Input Price (per 1M tokens) | Output Price (per 1M tokens) | Context Window Size | Max Output Tokens |
+| ------------- | --------------------------- | ---------------------------- | ------------------- | ----------------- |
+| Axon 2.5 Pro  | $2.00                       | $8.00                        | 200K tokens         | 128K              |
+| Axon 2.5 Mini | $0.50                       | $2.00                        | 1M tokens           | 128K              |
+
+## Prompt Caching
+
+Cached input tokens are automatically discounted at 50% off the standard input price. Caching kicks in automatically for repeated prompt prefixes.
+
+| Model         | Cached Input Price (per 1M tokens) |
+| ------------- | ---------------------------------- |
+| Axon 2.5 Pro  | $1.00                              |
+| Axon 2.5 Mini | $0.25                              |
 
 <Note>
-  Pricing for reasoning output tokens is calculated based on pricing per 1M tokens. For example, if the Axon Mini 1 model generates 100,000 output tokens (50000 output + 50000 reasoning), the cost will be 
-  $$
-  ($0.25 * 50000/1000000) + ($0.25 * 50000/1000000) = $0.02
-  $$
+  All models support tool calling, structured outputs, web search, and text +
+  image input with text output.
 </Note>

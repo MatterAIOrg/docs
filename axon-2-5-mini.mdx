@@ -1,0 +1,114 @@
+---
+title: Axon 2.5 Mini
+og:title: "Axon 2.5 Mini Model | MatterAI Documentation"
+og:description: "Axon 2.5 Mini - General purpose super intelligent LLM coding model for low-effort day-to-day tasks."
+og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1760447490/axon-mini_jjac8i.webp"
+og:url: "https://docs.matterai.so/axon-2-5-mini"
+---
+
+<CardGroup cols={2}>
+  <Card title="Get API Key" icon="key" href="/axon-ai/api-keys">
+    Generate a new API key
+  </Card>
+  <Card title="View Pricing" icon="credit-card" href="/axon-ai/pricing">
+    View model pricing
+  </Card>
+</CardGroup>
+
+## Model Details
+
+| Property       | Value             |
+| -------------- | ----------------- |
+| Model ID       | `axon-2-5-mini`   |
+| Context Window | 1,000,000 tokens  |
+| Max Output     | 128,000 tokens    |
+| Input Price    | $0.50 / 1M tokens |
+| Output Price   | $2.00 / 1M tokens |
+| Cached Input   | $0.25 / 1M tokens |
+
+## Capabilities
+
+- Tool Calling
+- Structured Outputs
+- Web Search
+- Text + Image Input
+- Text Output
+
+## Quick Start
+
+<CodeGroup>
+
+```bash cURL
+curl --location 'https://api2.matterai.so/v1/web/chat/completions' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer MATTERAI_API_KEY' \
+--data '{
+    "model": "axon-2-5-mini",
+    "max_new_tokens": 2048,
+    "temperature": 0.1,
+    "messages": [
+        {
+            "role": "user",
+            "content": "Hi"
+        }
+    ],
+    "stream": false
+}'
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: "MATTERAI_API_KEY",
+  baseURL: "https://api2.matterai.so/v1",
+});
+
+const response = await client.chat.completions.create({
+  model: "axon-2-5-mini",
+  messages: [{ role: "user", content: "Hi" }],
+  max_tokens: 2048,
+  temperature: 0.1,
+});
+
+console.log(response.choices[0].message.content);
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="MATTERAI_API_KEY",
+    base_url="https://api2.matterai.so/v1"
+)
+
+response = client.chat.completions.create(
+    model="axon-2-5-mini",
+    messages=[
+        {"role": "user", "content": "Hi"}
+    ],
+    max_tokens=2048,
+    temperature=0.1
+)
+
+print(response.choices[0].message.content)
+```
+
+</CodeGroup>
+
+<CardGroup cols={2}>
+  <Card
+    href="/axon-models"
+    title="Axon Models Overview"
+    img="https://res.cloudinary.com/dxvbskvxm/image/upload/v1759829903/axon-models_n4c8t6.webp"
+  >
+    Compare all available models
+  </Card>
+  <Card
+    href="/api-reference/endpoint/completions"
+    title="API Reference"
+    icon="book-open"
+  >
+    View full API documentation
+  </Card>
+</CardGroup>

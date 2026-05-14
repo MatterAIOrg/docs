@@ -39,6 +39,9 @@
     "eyebrows": "breadcrumbs"
   },
   "favicon": "/favicon.png",
+  "baseUrls": {
+    "matterai": "https://api2.matterai.so/v1"
+  },
   "navigation": {
     "tabs": [
       {
@@ -61,7 +64,7 @@
               "axon-overview",
               {
                 "group": "Models List",
-                "pages": ["axon", "axon-mini", "axon-code"]
+                "pages": ["axon-2-5-pro", "axon-2-5-mini"]
               },
               "axon-ai/pricing",
               "axon-ai/api-keys",
@@ -281,15 +284,11 @@
       {
         "tab": "API Reference",
         "pages": [
-          {
+{
             "group": "Inference",
-            "pages": ["api-reference/endpoint/completions"]
-          },
-          {
-            "group": "Models",
             "pages": [
-              "api-reference/endpoint/models",
-              "api-reference/endpoint/model"
+              "api-reference/endpoint/completions",
+              "api-reference/endpoint/messages"
             ]
           }
         ]
