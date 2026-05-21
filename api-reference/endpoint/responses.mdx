@@ -1,0 +1,542 @@
+---
+title: "Responses"
+api: "POST https://api2.matterai.so/v1/responses"
+description: "Create a model response using the MatterAI API (OpenAI-compatible)"
+og:title: "Responses API Reference | MatterAI Documentation"
+og:description: "Create a model response using the MatterAI API"
+og:url: "https://docs.matterai.so/api-reference/endpoint/responses"
+---
+
+## Authentication
+
+All API requests require authentication using a Bearer token. You can obtain your API key from the [MatterAI Console](https://app.matterai.so).
+
+```bash
+Authorization: Bearer MATTERAI_API_KEY
+```
+
+<Warning>
+  Keep your API key secure and never expose it in client-side code. Get your API
+  key from the MatterAI console.
+</Warning>
+
+## Request
+
+<ParamField body="model" type="string" required>
+  The model used for the response. Available models: `"axon-2-5-pro"`,
+  `"axon-2-5-mini"`.
+</ParamField>
+
+<ParamField body="input" type="string or array" required>
+  Text or array of input items to the model, used to generate a response. Accepts a plain string (equivalent to a `"user"` message) or an array of input items.
+
+  <Expandable title="Input Item (EasyInputMessage)">
+    <ParamField body="role" type="string" required>
+      The role of the message. One of `"user"`, `"assistant"`, `"system"`,
+      or `"developer"`.
+    </ParamField>
+
+    <ParamField body="content" type="string or array" required>
+      Text content or an array of content blocks.
+
+      <Expandable title="Content Block">
+        <ParamField body="type" type="string" required>
+          The type of content. Use `"input_text"` for text content,
+          `"input_image"` for image URLs.
+        </ParamField>
+
+        <ParamField body="text" type="string">
+          The text content (for `input_text` blocks).
+        </ParamField>
+
+        <ParamField body="image_url" type="string">
+          The URL of the image (for `input_image` blocks).
+        </ParamField>
+      </Expandable>
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+<ParamField body="instructions" type="string">
+  A system (or developer) message inserted into the model's context. When used
+  with `previous_response_id`, instructions from a previous response are not
+  carried over to the next response. Equivalent to the `"system"` role in chat
+  completions.
+</ParamField>
+
+<ParamField body="max_output_tokens" type="integer" default="512">
+  An upper bound for the number of tokens that can be generated for a response,
+  including visible output tokens and reasoning tokens.
+</ParamField>
+
+<ParamField body="stream" type="boolean" default="false">
+  Whether to stream the response as it's generated using server-sent events.
+</ParamField>
+
+<ParamField body="reasoning" type="object">
+  Configuration for reasoning capabilities.
+  <Expandable title="Reasoning Object">
+    <ParamField body="effort" type="string" default="medium">
+      The level of reasoning effort. Options: `"none"`, `"low"`, `"medium"`,
+      `"high"`.
+    </ParamField>
+
+    <ParamField body="summary" type="string">
+      The level of reasoning summary. Options: `"auto"`, `"concise"`,
+      `"detailed"`.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+<ParamField body="temperature" type="number" default="0.1">
+  Controls randomness in the output. Higher values make output more random,
+  lower values make it more focused and deterministic. Range: 0.0 to 2.0.
+</ParamField>
+
+<ParamField body="top_p" type="number" default="1">
+  Controls diversity via nucleus sampling. Range: 0.0 to 1.0.
+</ParamField>
+
+<ParamField body="text" type="object">
+  Configuration options for a text response from the model.
+  <Expandable title="Text Config Object">
+    <ParamField body="format" type="object">
+      An object specifying the format that the model must output.
+      <Expandable title="Format Object">
+        <ParamField body="type" type="string" default="text">
+          The type of response format. Options: `"text"`, `"json_schema"`,
+          `"json_object"`.
+        </ParamField>
+
+        <ParamField body="name" type="string">
+          The name of the response format (for `json_schema`).
+        </ParamField>
+
+        <ParamField body="schema" type="object">
+          The JSON Schema for the response format (for `json_schema`).
+        </ParamField>
+
+        <ParamField body="strict" type="boolean">
+          Whether to enable strict schema adherence (for `json_schema`).
+        </ParamField>
+      </Expandable>
+    </ParamField>
+
+    <ParamField body="verbosity" type="string">
+      Constrains the verbosity of the model's response. Options: `"low"`,
+      `"medium"`, `"high"`.
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+<ParamField body="store" type="boolean" default="true">
+  Whether to store the generated model response for later retrieval via API.
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  Set of up to 16 key-value pairs that can be attached to the response. Keys are
+  strings with a maximum length of 64 characters. Values are strings with a
+  maximum length of 512 characters.
+</ParamField>
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique identifier for this response.
+</ResponseField>
+
+<ResponseField name="object" type="string">
+  The object type, which is always `"response"`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  The status of the response generation. One of `"completed"`, `"failed"`,
+  `"in_progress"`, `"cancelled"`, or `"incomplete"`.
+</ResponseField>
+
+<ResponseField name="created_at" type="integer">
+  Unix timestamp (in seconds) of when this response was created.
+</ResponseField>
+
+<ResponseField name="model" type="string">
+  The model used to generate the response. Available models: `"axon-2-5-pro"`,
+  `"axon-2-5-mini"`.
+</ResponseField>
+
+<ResponseField name="output" type="array">
+  An array of content items generated by the model.
+
+  <Expandable title="Output Item (Message)">
+    <ResponseField name="id" type="string">
+      The unique ID of the output message.
+    </ResponseField>
+
+    <ResponseField name="type" type="string">
+      The type of the output item. Always `"message"`.
+    </ResponseField>
+
+    <ResponseField name="role" type="string">
+      The role of the output message. Always `"assistant"`.
+    </ResponseField>
+
+    <ResponseField name="status" type="string">
+      The status of the message. One of `"in_progress"`, `"completed"`,
+      `"incomplete"`.
+    </ResponseField>
+
+    <ResponseField name="content" type="array">
+      The content of the output message.
+      <Expandable title="Content Block">
+        <ResponseField name="type" type="string">
+          The type of content. Values: `"output_text"`, `"refusal"`.
+        </ResponseField>
+
+        <ResponseField name="text" type="string">
+          The text output from the model (for `output_text` blocks).
+        </ResponseField>
+
+        <ResponseField name="annotations" type="array">
+          Annotations of the text output, such as citations.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="output_text" type="string">
+  SDK-only convenience property containing the aggregated text output from all
+  `output_text` items in the `output` array.
+</ResponseField>
+
+<ResponseField name="usage" type="object">
+  Usage statistics for the response request.
+
+  <Expandable title="Usage Object">
+    <ResponseField name="input_tokens" type="integer">
+      Number of tokens in the input.
+    </ResponseField>
+
+    <ResponseField name="output_tokens" type="integer">
+      Number of tokens in the generated output.
+    </ResponseField>
+
+    <ResponseField name="total_tokens" type="integer">
+      Total number of tokens used (input + output).
+    </ResponseField>
+
+    <ResponseField name="output_tokens_details" type="object">
+      A detailed breakdown of the output tokens.
+      <Expandable title="Output Tokens Details">
+        <ResponseField name="reasoning_tokens" type="integer">
+          Number of tokens used for reasoning.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+    <ResponseField name="input_tokens_details" type="object">
+      A detailed breakdown of the input tokens.
+      <Expandable title="Input Tokens Details">
+        <ResponseField name="cached_tokens" type="integer">
+          Number of tokens retrieved from cache.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="error" type="object">
+  An error object returned when the model fails to generate a response.
+
+  <Expandable title="Error Object">
+    <ResponseField name="code" type="string">
+      The error code. Possible values: `"server_error"`, `"rate_limit_exceeded"`,
+      `"invalid_prompt"`, etc.
+    </ResponseField>
+
+    <ResponseField name="message" type="string">
+      A human-readable description of the error.
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>
+
+## Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl --location 'https://api2.matterai.so/v1/responses' \
+--header 'content-type: application/json' \
+--header 'Authorization: Bearer MATTERAI_API_KEY' \
+--data '{
+  "model": "axon-2-5-pro",
+  "input": "Tell me a short story about a curious robot."
+}'
+```
+
+```javascript JavaScript
+const response = await fetch("https://api2.matterai.so/v1/responses", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer MATTERAI_API_KEY",
+  },
+  body: JSON.stringify({
+    model: "axon-2-5-pro",
+    input: "Tell me a short story about a curious robot.",
+  }),
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+url = "https://api2.matterai.so/v1/responses"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer MATTERAI_API_KEY"
+}
+
+payload = {
+    "model": "axon-2-5-pro",
+    "input": "Tell me a short story about a curious robot."
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
+```
+
+</CodeGroup>
+
+## Example Response
+
+```json
+{
+  "id": "resp_abc123def456",
+  "object": "response",
+  "created_at": 1741476542,
+  "status": "completed",
+  "model": "axon-2-5-pro",
+  "output": [
+    {
+      "id": "msg_abc123def456",
+      "type": "message",
+      "status": "completed",
+      "role": "assistant",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "In a gleaming city of tomorrow, a small robot named Bolt was built to sort packages.",
+          "annotations": []
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "input_tokens": 27,
+    "output_tokens": 94,
+    "total_tokens": 121,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "input_tokens_details": {
+      "cached_tokens": 0
+    }
+  }
+}
+```
+
+## Example: Multi-turn Conversation
+
+To continue a conversation, pass the `previous_response_id` from the previous response:
+
+<CodeGroup>
+
+```bash cURL
+curl --location 'https://api2.matterai.so/v1/responses' \
+--header 'content-type: application/json' \
+--header 'Authorization: Bearer MATTERAI_API_KEY' \
+--data '{
+  "model": "axon-2-5-pro",
+  "input": "What happened next?",
+  "previous_response_id": "resp_abc123def456"
+}'
+```
+
+```javascript JavaScript
+const response = await fetch("https://api2.matterai.so/v1/responses", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer MATTERAI_API_KEY",
+  },
+  body: JSON.stringify({
+    model: "axon-2-5-pro",
+    input: "What happened next?",
+    previous_response_id: "resp_abc123def456",
+  }),
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+url = "https://api2.matterai.so/v1/responses"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer MATTERAI_API_KEY"
+}
+
+payload = {
+    "model": "axon-2-5-pro",
+    "input": "What happened next?",
+    "previous_response_id": "resp_abc123def456"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
+```
+
+</CodeGroup>
+
+## Example: With Reasoning
+
+<CodeGroup>
+
+```bash cURL
+curl --location 'https://api2.matterai.so/v1/responses' \
+--header 'content-type: application/json' \
+--header 'Authorization: Bearer MATTERAI_API_KEY' \
+--data '{
+  "model": "axon-2-5-pro",
+  "instructions": "You are a helpful assistant that explains complex topics simply.",
+  "input": "Explain quantum entanglement in one paragraph.",
+  "reasoning": {
+    "effort": "medium"
+  }
+}'
+```
+
+```javascript JavaScript
+const response = await fetch("https://api2.matterai.so/v1/responses", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer MATTERAI_API_KEY",
+  },
+  body: JSON.stringify({
+    model: "axon-2-5-pro",
+    instructions:
+      "You are a helpful assistant that explains complex topics simply.",
+    input: "Explain quantum entanglement in one paragraph.",
+    reasoning: {
+      effort: "medium",
+    },
+  }),
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+url = "https://api2.matterai.so/v1/responses"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer MATTERAI_API_KEY"
+}
+
+payload = {
+    "model": "axon-2-5-pro",
+    "instructions": "You are a helpful assistant that explains complex topics simply.",
+    "input": "Explain quantum entanglement in one paragraph.",
+    "reasoning": {
+        "effort": "medium"
+    }
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
+```
+
+</CodeGroup>
+
+## Streaming
+
+When `stream` is set to `true`, the API returns a stream of Server-Sent Events (SSE). The streaming events use the OpenAI Responses API format:
+
+```json
+data: {"type":"response.created","response":{"id":"resp_abc123","object":"response","created_at":1741476542,"status":"in_progress","model":"axon-2-5-pro","output":[],"usage":null}}
+
+data: {"type":"response.in_progress","response":{"id":"resp_abc123","object":"response","created_at":1741476542,"status":"in_progress","model":"axon-2-5-pro","output":[],"usage":null}}
+
+data: {"type":"response.output_item.added","output_index":0,"item":{"id":"msg_abc123","type":"message","status":"in_progress","role":"assistant","content":[]}}
+
+data: {"type":"response.content_part.added","item_id":"msg_abc123","output_index":0,"content_index":0,"part":{"type":"output_text","text":"","annotations":[]}}
+
+data: {"type":"response.output_text.delta","item_id":"msg_abc123","output_index":0,"content_index":0,"delta":"Hello"}
+
+data: {"type":"response.output_text.done","item_id":"msg_abc123","output_index":0,"content_index":0,"text":"Hello world!"}
+
+data: {"type":"response.output_item.done","output_index":0,"item":{"id":"msg_abc123","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"Hello world!","annotations":[]}]}}
+
+data: {"type":"response.completed","response":{"id":"resp_abc123","object":"response","created_at":1741476542,"status":"completed","model":"axon-2-5-pro","output":[...],"usage":{"input_tokens":10,"output_tokens":12,"total_tokens":22}}}
+```
+
+## Migrating from Chat Completions
+
+The Responses API provides a cleaner interface for text generation. Key differences:
+
+| Chat Completions             | Responses                                  |
+| ---------------------------- | ------------------------------------------ |
+| `POST /v1/chat/completions`  | `POST /v1/responses`                       |
+| `messages` array             | `input` (string or array)                  |
+| `system` message role        | `instructions` string parameter            |
+| `choices[0].message.content` | `output[].content[].text` or `output_text` |
+| `max_tokens`                 | `max_output_tokens`                        |
+| `finish_reason`              | `status` field on response                 |
+
+## Error Responses
+
+The API returns standard HTTP status codes to indicate success or failure:
+
+<ResponseField name="400" type="Bad Request">
+  Invalid request parameters or malformed JSON.
+</ResponseField>
+
+<ResponseField name="401" type="Unauthorized">
+  Invalid or missing API key.
+</ResponseField>
+
+<ResponseField name="429" type="Rate Limited">
+  Too many requests. Please slow down.
+</ResponseField>
+
+<ResponseField name="500" type="Internal Server Error">
+  Server error. Please try again later.
+</ResponseField>
+
+Example error response:
+
+```json
+{
+  "error": {
+    "message": "Invalid API key provided",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key"
+  }
+}
+```

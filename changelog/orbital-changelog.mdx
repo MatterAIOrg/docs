@@ -3,6 +3,419 @@ title: "Orbital Changelog"
 description: "Latest updates and improvements for Orbital"
 ---
 
+<Update label="May 21, 2026">
+## v6.2.0
+
+### Added
+
+- **Tool call result pairing safety net**: New `backfillMissingToolResults` function in OpenAI format transform that backfills placeholder tool messages for unanswered parallel tool calls, preventing provider rejections when tool_call/tool_result pairs are mismatched
+- **Tool call result pairing module**: Pure functions (`reconcileAssistantToolUses`, `toolUseIdsRequiringResults`, `allToolResultsCollected`) to keep assistant tool_calls and tool_results paired 1:1, with comprehensive unit test coverage
+- **Task.ts reconciliation**: Gating API requests until every tool_call in the assistant message has its matching tool_result collected, preventing partial result sets from being sent to providers
+
+### Changed
+
+- **AssistantMessageParser performance**: Avoided O(n²) string slicing in the streaming hot loop by deferring content updates to end-of-chunk; added 20KB max extract length threshold for large accumulated arguments during streaming
+- **presentAssistantMessage optimization**: Replaced deep clone with shallow copy for streaming content blocks to reduce overhead during large file streaming
+- **FileWriteTool partial display**: Truncated large file content during streaming preview (5KB limit) to prevent IPC bottlenecks and UI freezing
+- **Model list cleanup**: Removed deprecated `axon-code-2-pro` and `axon-code-2-pro-high` model entries from provider configurations
+
+### Fixed
+
+- ReasoningBlock arrow icon rotation styling
+- OutOfCreditsBanner border-radius styling consistency
+  </Update>
+
+<Update label="April 10, 2026">
+## v6.0.0
+
+🚀 **Agent Manager Update**
+
+### Highlights
+
+This major release introduces the **Agent Manager**, a powerful new feature for managing multiple AI agents across workspaces with a dedicated sidebar and file viewer panel.
+
+### Added
+
+#### Agent Manager
+
+- **Agent Manager Sidebar**: New collapsible sidebar for managing multiple agent tasks across workspaces
+  - Workspace-based task organization with expandable folders
+  - Quick access to recent tasks with compact timestamps
+  - "New Agent" button for starting fresh conversations
+- **Agent File Viewer**: Resizable file viewer panel for reviewing diffs and file changes
+  - Drag-to-resize functionality with min/max width constraints
+  - Automatic viewport-aware sizing
+  - Pull request-style diff view integration
+- **Agent Toggle**: Toggle button to show/hide the agent manager sidebar with smooth animations
+
+#### Exploration Groups
+
+- **Elapsed Time Display**: Exploration groups now show elapsed time during and after exploration
+  - Live timer updates during active exploration (e.g., "Exploring for 1m30s")
+  - Summary with total time on completion (e.g., "Explored 5 files, 2 searches for 45s")
+  - Auto-collapse when exploration completes
+
+#### Model Selection
+
+- **Axon Model Tooltips**: Hover tooltips in ModelSelector showing details for Axon models
+- **Enhanced Model Provider Hook**: New `useOpenRouterModelProviders` hook for better model management
+
+#### Image Handling
+
+- **ImageAttachment Interface**: Refactored image handling to use a unified `ImageAttachment` interface
+- **Improved Thumbnails**: Enhanced thumbnail component with better image preview support
+
+#### UI Components
+
+- **Custom Icons Utility**: New custom SVG icons including `Folder01Icon`, `Folder02Icon`, `ArrowDown01Icon`, `AddCircleHalfDotIcon`
+- **Copy Button Update**: Updated copy icon styling
+
+### Changed
+
+- **Streamlined Chat UI**: Cleaner, more focused chat interface with improved visual hierarchy
+- **Better Diff View**: Enhanced diff view for the edit tool with improved readability
+- **Maximize States**: Fixed maximize state handling for better window management
+- **ChatRow Component**: Enhanced with agent manager mode support and improved rendering
+- **ChatTextArea**: Refined for better user interaction
+- **ReasoningBlock**: Minor styling improvements
+
+### Fixed
+
+- Maximize state persistence issues
+- Various UI inconsistencies across components
+
+### Breaking Changes
+
+- Minimum VS Code version requirement updated
+  </Update>
+
+<Update label="April 5, 2026">
+## v5.7.6
+
+### Added
+
+- Native tool call helpers for kilocode provider
+- Enhanced assistant message parsing with improved tool handling
+- LSP tool integration for better code navigation
+- File write tool with improved content handling
+- Multi-file search replace strategy for complex edit operations
+- New tool type definitions in packages/types
+- Git branch display in bottom API config showing current repository branch
+- GitBranchIcon custom SVG icon for branch visualization
+- New message types for git branch request/response (fetchGitBranchRequest, gitBranchResponse)
+
+### Changed
+
+- **Major Tool Architecture Refactoring**: Consolidated multiple file editing tools into a unified, simplified tool system
+  - Merged `edit_file`, `insert_content`, `search_and_replace`, `write_to_file`, `apply_diff` tools into streamlined `file_write` tool
+  - Consolidated plan file tools (`list_plan_files`, `read_plan_file`, `plan_file_edit`) into core task management
+  - Removed redundant native tool prompt definitions
+  - Simplified `getAllowedJSONToolsForMode` with cleaner tool selection logic
+- Refactored system prompts for better tool organization and maintainability
+- Updated assistant message parsing with new `parseAssistantMessageV2` implementation
+- Enhanced diff strategies with improved multi-search-replace functionality
+- Updated task handling with improved checkpoint service integration
+- Enhanced webview message handler for better task coordination
+- Improved ChatRow, ChatView, and CommandExecution UI components
+- Updated i18n translations for en locale
+- Refactored BottomApiConfig component with improved layout and branch display
+- Enhanced ProgressIndicator component styling
+- Updated index.css with improved styling utilities
+
+### Fixed
+
+- Shadow checkpoint service stability improvements
+- Assistant message presentation edge cases
+- Browser action tool compatibility
+- Webview message type definitions
+- File write tool: proper workspace path detection for partial display during streaming
+- File write tool: ensure tool result is always pushed on user rejection
+- GitHubDiffView: dynamic margin calculation for proper diff alignment
+- ToolUseBlock: improved component structure and styling
+- Git utilities: properly distinguish between current branch and default branch
+  - Added `currentBranch` field to `GitRepositoryInfo` interface
+  - Fixed webviewMessageHandler to use `currentBranch` instead of `defaultBranch`
+  - Updated tests to reflect the correct field name
+
+### Removed
+
+- Deprecated individual file editing tools (editFileTool, insertContentTool, searchAndReplaceTool, writeToFileTool, applyDiffTool, multiApplyDiffTool)
+- Deprecated plan file tools (listPlanFilesTool, readPlanFileTool, planFileEditTool)
+- Redundant tool prompt files (edit-file.ts, insert-content.ts, search-and-replace.ts, write-to-file.ts)
+- Native tool prompt definitions (apply_diff.ts, edit_file.ts, insert_content.ts, list_plan_files.ts, plan_file_edit.ts, read_plan_file.ts, search_and_replace.ts, write_to_file.ts)
+- Associated test files for removed tools
+- FastApplyChatDisplay component (functionality consolidated)
+  </Update>
+
+<Update label="April 2, 2026">
+## v5.7.3
+
+### Added
+
+- OAuth authentication support for MCP servers
+- LSP tool for code definition navigation
+- file_write tool implementation
+
+### Changed
+
+- Modernized settings panel UI with new card-based design
+- Reduced VSCodeButton size by 5% across all variants for better visual consistency
+
+### Fixed
+
+- Allow changing 3p models for existing tasks and fixed model display names
+  </Update>
+
+<Update label="March 29, 2026">
+## v5.7.2
+
+### Added
+
+- Third-party provider support with Fireworks, Ollama, and OpenCode integrations
+  </Update>
+
+<Update label="March 20, 2026">
+## v5.7.0
+
+### Changed
+
+- Major release with enhanced provider integrations
+  </Update>
+
+<Update label="March 14, 2026">
+## v5.6.5
+
+### Changed
+
+- Updated git repository URL across all localization files
+- Minor stability improvements
+  </Update>
+
+<Update label="March 13, 2026">
+## v5.6.4
+
+### Changed
+
+- Name cleanup and branding consistency updates
+- Improved CSS styling for better UI consistency
+  </Update>
+
+<Update label="March 12, 2026">
+## v5.6.3
+
+### Changed
+
+- Improved reasoning flow with enhanced time tracking
+- Better reasoning block display and interaction
+  </Update>
+
+<Update label="March 10, 2026">
+## v5.6.2
+
+### Added
+
+- Fade-up and shimmer animations for ChatRow, ChatView, and ReasoningBlock components
+- Enhanced visual feedback with smooth animation effects
+
+### Changed
+
+- UI cleanups across chat components
+- Improved chat message rendering and layout
+  </Update>
+
+<Update label="March 8, 2026">
+## v5.6.0
+
+### Added
+
+- Split high think models for better model organization
+- Enhanced OpenRouter model providers hook
+
+### Changed
+
+- Tool cleanups and optimizations
+- Improved model selection handling
+  </Update>
+
+<Update label="March 6, 2026">
+## v5.5.7
+
+### Added
+
+- Web fetch and web search tools for enhanced information retrieval
+- Model state per task - each task now maintains its own model selection state independently
+
+### Changed
+
+- Cleaned up chat theme for improved visual consistency
+- Enhanced webview message handling for better task management
+
+### Fixed
+
+- Fixed @ mentions when editing messages
+  </Update>
+
+<Update label="March 2, 2026">
+## v5.5.4
+
+### Added
+
+- Better follow up question UI for improved user interaction
+
+### Changed
+
+- Enhanced queue and sending prevention for better chat UX
+- Improved file list with scrollable container and max height
+
+### Fixed
+
+- Fixed activity bar icon display
+- Fixed authentication navigation issues
+  </Update>
+
+<Update label="February 26, 2026">
+## v5.5.3
+
+### Added
+
+- Plan file tools (readPlanFile, listPlanFiles) for better plan management
+- Image input modality support for enhanced interactions
+- Plan memory manager for improved plan tracking
+
+### Changed
+
+- Enhanced UI improvements across multiple components
+- Updated PostHog telemetry integration
+- Improved folder mention chip UI
+
+### Fixed
+
+- Limited background task height for better layout management
+  </Update>
+
+<Update label="February 26, 2026">
+## v5.5.2
+
+### Added
+
+- Background tasks support for multi-chats - now you can run multiple chat tasks simultaneously without blocking each other
+- Single file accept metrics - track detailed metrics when accepting individual file edits
+- Model state per task - each task now maintains its own model selection state independently
+- Bottom anchor for changes and navigation - improved UI with anchored navigation controls
+- Todo IDE plan view - enhanced plan viewing experience in the IDE
+
+### Changed
+
+- Chat performance improvements - optimized rendering and message handling for smoother chat experience
+- UI updates across multiple components for better consistency and user experience
+- Enhanced file edit review controller with improved functionality
+- Updated task metadata handling for better state management
+
+### Fixed
+
+- Fixed plan implementation issues for better plan execution
+- Fixed chat new lines and paste cursor positioning for improved text input experience
+- Fixed mention chip alignment for better visual consistency
+- Auto reject tools and send new message - improved tool rejection workflow
+  </Update>
+
+<Update label="February 13, 2026">
+## v5.4.1
+
+### Added
+
+- Sticky user messages for better chat navigation
+- Pro model info display in settings
+- Custom icons utility for improved UI components
+
+### Changed
+
+- Updated profile page with usage data
+- Streamlined model names and auto model selection
+- Improved codebase indexing tool UI
+- Enhanced task history list
+- Updated notifications integration
+- UI updates for code reviews
+
+### Fixed
+
+- Fixed file path bug in code reviews
+  </Update>
+
+<Update label="February 12, 2026">
+## v5.4.0
+
+### Added
+
+- Open plan in editor functionality for better plan management
+- Better fuzzy search for improved file context matching
+
+### Changed
+
+- Cleaner chat interface with improved UI
+- Better diff view for edit tool
+- Edit tool improvements with context search enhancements
+- Minor UI update to task header
+  </Update>
+
+<Update label="February 3, 2026">
+## v5.3.4
+
+### Fixed
+
+- Fixed multi-window authentication synchronization
+- Fixed beta model access for axon-code-2-pro
+  </Update>
+
+<Update label="February 2, 2026">
+## v5.3.2
+
+### Added
+
+- Beta models gating for axon-code-2-pro with backend API integration
+- Custom icons utility for improved UI components
+
+### Changed
+
+- Set temperature to 0.2 for OpenRouter provider
+- Enhanced file edit tool with improved functionality
+- Updated kilocode models configuration
+- Cleaned up chat text area component
+- Updated and optimized test files
+- UI improvements across chat components
+  </Update>
+
+<Update label="January 30, 2026">
+## v5.3.1
+
+### Added
+
+- Retry button for 5xx streaming failures
+
+### Fixed
+
+- Fixed use_skill tool being included in system prompt when no skills are available
+  </Update>
+
+<Update label="January 29, 2026">
+## v5.3.0
+
+### Added
+
+- New skill tool functionality for enhanced code assistance
+- Skill parser and type definitions for skill management
+- Comprehensive test coverage for skill tool components
+- Enhanced code index orchestrator with skill integration
+- State manager for skill tool operations
+
+### Changed
+
+- Updated tool type definitions to support skill tools
+- Enhanced assistant message presentation with skill support
+- Improved code index manager with skill-related functionality
+- Updated dependencies in package.json
+  </Update>
+
 <Update label="January 14, 2026">
 ## v5.0.0
 
@@ -56,7 +469,7 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Fixed message queuing after rejecting exec_cmd tool
 - Fixed stream tool calling issues when tools got stuck
 - Notify LLM if files have been changed by the user post its own edits
-</Update>
+  </Update>
 
 <Update label="December 20, 2025">
 ## v4.204.1
@@ -81,7 +494,7 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Fixed code paths return value issue in AuthWizard
 - Improved cancel button UI and functionality
 - Enhanced CLI authentication initialization process
-</Update>
+  </Update>
 
 <Update label="December 20, 2025">
 ## v4.204.0
@@ -106,7 +519,7 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Cleaned up AI code reviews card for better user experience
 - Fixed various UI inconsistencies across components
 - Improved error handling in webview message handler
-</Update>
+  </Update>
 
 <Update label="December 19, 2025">
 ## v4.203.0
@@ -131,42 +544,19 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Better handling of chat text area interactions
 - Improved mention chip display and functionality
 - Enhanced UI cleanup and consistency across components
-</Update>
-
-<Update label="December 19, 2025">
-## v4.203.0
-
-### Added
-
-- Enhanced chat text area with improved mention chip functionality
-- New mention chip demo component for better user interaction
-
-### Changed
-
-- Refactored ChatTextArea component for better performance and maintainability
-- Updated ChatRow component with streamlined UI elements
-- Improved CodeAccordian component for enhanced code display
-- Enhanced useOpenRouterModelProviders hook for better model management
-- Updated prettyModelName utility for improved model name formatting
-- Refined KiloTaskHeader component with better task management
-- Improved GhostServiceSettings component for enhanced configuration
-
-### Fixed
-
-- Better handling of chat text area interactions
-- Improved mention chip display and functionality
-- Enhanced UI cleanup and consistency across components
-</Update>
+  </Update>
 
 <Update label="December 18, 2025">
 ## v4.202.0
 
 ### Added
+
 - New utilities for generating unified diffs (`buildFileEditDiff`, `computeDiffStats`) and classifying file icons (`getFileIconClass`).
 - `context` prop to `ErrorRow` for displaying additional error context.
 - `headerContent` prop to `CodeAccordian` for custom header rendering.
 
 ### Changed
+
 - **Revamped Error Display:** Introduced a compact, single-line error display with an interactive info icon that reveals full details in a tooltip.
 - **Enhanced File Edit Viewer:** Significantly improved the `fileEdit` display in chat, now showing unified diffs, line-by-line additions/deletions, and a more detailed header with file path and diff statistics.
 - **Improved Batch File Permission UI:** Updated the UI for batch file permissions, including better display of file paths and line snippets.
@@ -174,19 +564,22 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - **General UI/Styling Refinements:** Applied various styling and layout improvements across `ToolUseBlock`, `ToolUseBlockHeader`, `ModelSelector`, and `CodeAccordian` components for a cleaner user experience.
 
 ### Fixed
+
 - Corrected line snippet formatting for file paths in `BatchFilePermission` and `ChatRow`.
 - Implemented click-outside-to-close functionality for the new error tooltip in `ErrorRow`.
 - Improved accessibility with better keyboard navigation support.
-</Update>
+  </Update>
 
 <Update label="December 16, 2025">
 ## v4.201.0
 
 ### Added
+
 - Enhanced file edit review functionality with improved user experience
 - Better webview message handling for file edit operations
 
 ### Changed
+
 - Improved file edit review interface with refined accept/reject buttons
 - Updated ChatTextArea component for better user interaction
 - Enhanced OpenRouter provider integration
@@ -194,20 +587,23 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Updated translations for ar, ca, cs, de, es, fr, hi, id, it, ja, ko, nl, pl, pt-BR, ru, th, tr, uk, vi, zh-CN and zh-TW
 
 ### Fixed
+
 - Better handling of file edit review edge cases
 - Improved localization support for chat components
-</Update>
+  </Update>
 
 <Update label="December 15, 2025">
 ## v4.200.0
 
 ### Added
+
 - New file edit review system with accept/reject functionality
 - Enhanced monthly quota management within chat interface
 - Improved mentions cleanup and handling
 - New AcceptRejectButtons component for better user interaction
 
 ### Changed
+
 - Updated UI components across dialogs, dropdowns, popovers, and selects
 - Enhanced chat interface with improved user experience
 - Refined chat row component for better readability
@@ -215,15 +611,17 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Streamlined chat message layout and interactions
 
 ### Fixed
+
 - Better handling of file edit operations
 - Improved quota tracking and display
 - Enhanced error handling in chat interface
-</Update>
+  </Update>
 
 <Update label="December 7, 2025">
 ## v4.123.1
 
 ### Changed
+
 - Refined chat UI components with improved styling and consistency
 - Updated todo list display with better iconography using CheckCircle components
 - Enhanced timestamp display with improved font sizing
@@ -232,118 +630,136 @@ Completely refreshed interface with improved auth flow and review-only mode.
 - Updated font weights and sizes for better visual hierarchy
 
 ### Fixed
+
 - Better handling of todo list status indicators
 - Improved color variable references for consistent theming
-</Update>
+  </Update>
 
 <Update label="December 3, 2025">
 ## v4.123.0
 
 ### Added
+
 - Enhanced chat interface with improved user experience
 - Cleaner message display and layout optimization
 
 ### Changed
+
 - Refined chat row component for better readability
 - Updated tool use block styling for improved visual consistency
 - Enhanced internationalization support for chat components
 
 ### Fixed
+
 - Improved message formatting and spacing
 - Better handling of long messages in chat interface
-</Update>
+  </Update>
 
 <Update label="December 3, 2025">
 ## v4.122.0
 
 ### Added
+
 - Enhanced credit management system with improved warnings
 - Better error handling for insufficient credit scenarios
 - Comprehensive test coverage for error utilities
 
 ### Changed
+
 - Updated credit warning messages to be more user-friendly
 - Improved low credit warning UI components
 - Enhanced error messaging for better user guidance
 
 ### Fixed
+
 - Better handling of credit limit scenarios
 - Improved error message display and formatting
-</Update>
+  </Update>
 
 <Update label="November 30, 2025">
 ## v4.121.0
 
 ### Added
+
 - Refined codebase search functionality with improved accuracy
 - Enhanced search result filtering and scoring
 - Better integration with codebase indexing system
 
 ### Changed
+
 - Optimized search result limits (reduced from 200 to 5 max results)
 - Improved search score thresholds (minimum score: 0.5)
 - Enhanced model provider integration
 - Streamlined codebase search UI components
 
 ### Fixed
+
 - Better handling of search result pagination
 - Improved search result display formatting
 - Enhanced model selection interface
-</Update>
+  </Update>
 
 <Update label="November 27, 2025">
 ## v4.120.0
 
 ### Added
+
 - Complete codebase indexing system with backend integration
 - Vector store migration to backend services
 - Enhanced embedding endpoint functionality
 - Improved package cleanup and optimization
 
 ### Changed
+
 - Migrated vector store operations to backend for better performance
 - Refactored codebase indexing architecture for scalability
 - Enhanced UI components for better user experience
 - Improved model provider configurations
 
 ### Fixed
+
 - Resolved embedding endpoint connectivity issues
 - Fixed codebase indexing performance bottlenecks
 - Enhanced error handling in vector store operations
-</Update>
+  </Update>
 
 <Update label="November 20, 2025">
 ## v4.119.0
 
 ### Added
+
 - Hardcoded model IDs for improved Axon integration
 - Enhanced tool optimization for better performance
 - Credit usage display per model for better cost tracking
 - Improved model selection interface
 
 ### Changed
+
 - Optimized API calls to reduce latency
 - Enhanced model provider architecture
 - Improved credit management and display
 - Streamlined tool execution pipeline
 
 ### Fixed
+
 - Better handling of model selection edge cases
 - Improved credit tracking accuracy
 - Enhanced error handling in model provider operations
-</Update>
+  </Update>
 
 <Update label="November 13, 2025">
 ## v4.118.0
 
 ### Added
+
 - Initial release with core functionality
 - Basic chat interface and model integration
 - Foundational codebase indexing capabilities
 
 ### Features
+
 - AI-powered code assistance
 - Multi-model support through OpenRouter
 - Basic autocomplete and code suggestions
 - Initial marketplace integration
-</Update>
+  </Update>

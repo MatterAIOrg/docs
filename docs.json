@@ -287,6 +287,7 @@
 {
             "group": "Inference",
             "pages": [
+              "api-reference/endpoint/responses",
               "api-reference/endpoint/completions",
               "api-reference/endpoint/messages"
             ]
