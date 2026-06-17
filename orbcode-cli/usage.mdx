@@ -1,0 +1,113 @@
+---
+title: "OrbCode CLI Usage"
+sidebarTitle: "Usage"
+description: "Slash commands, keyboard shortcuts, approvals, and headless mode"
+---
+
+# Usage
+
+The directory you launch OrbCode from becomes the **workspace directory**: the default target for file operations and commands, and the file listing the model sees in its environment details.
+
+## Interactive mode
+
+```
+orbcode                 start an interactive session in the current directory
+orbcode "<prompt>"      start an interactive session with an initial prompt
+orbcode login           sign in to MatterAI (browser device flow)
+orbcode --model <id>    use a specific model for this run (also -m)
+orbcode --resume <id>   resume a previous session by id (also -r)
+orbcode --version       print version
+orbcode --help          show help
+```
+
+The TUI always takes over the full terminal screen on launch (prior shell output stays in scrollback).
+
+## Headless mode
+
+```bash
+orbcode -p "explain the build pipeline in this repo"
+orbcode -p "fix the lint errors" --yolo
+```
+
+Prints **only the final content** to stdout (the completion result, or the last assistant message) — no tool activity, no intermediate text. Errors go to stderr.
+
+Without `--yolo`, edit/command approvals are auto-denied (read-only analysis). Followup questions are auto-answered with "proceed with best judgment".
+
+| flag            | effect                                                                          |
+| --------------- | ------------------------------------------------------------------------------- |
+| `-p "<prompt>"` | run a single prompt non-interactively, print only the final response            |
+| `--yolo`        | non-interactive with edits/commands auto-approved (dangerous ones still prompt) |
+| `--model <id>`  | use a specific model for this run (also `-m`)                                   |
+| `--resume <id>` | resume a previous session by id (also `-r`)                                     |
+
+## Slash commands
+
+| command      | action                                                                                                |
+| ------------ | ----------------------------------------------------------------------------------------------------- |
+| `/help`      | list commands                                                                                         |
+| `/model`     | scrollable model picker (`/model pro` / `/model mini` / full id selects directly)                     |
+| `/clear`     | clear the screen only, like the terminal's `clear` — the conversation and context continue            |
+| `/new`       | start a fresh conversation/session with a clean slate                                                 |
+| `/resume`    | pick a previous session for this directory and continue it (screen is cleared, conversation replayed) |
+| `/analytics` | open the MatterAI analytics dashboard (app.matterai.so/orbital) in the browser                        |
+| `/compact`   | summarize the conversation and replace history with the summary                                       |
+| `/tasks`     | print the current task list                                                                           |
+| `/status`    | version, model, account, gateway, context usage, cost, approval modes                                 |
+| `/cost`      | show session cost and fetch account balance                                                           |
+| `/init`      | analyze the codebase and create/improve `AGENTS.md`                                                   |
+| `/login`     | start the browser sign-in flow                                                                        |
+| `/logout`    | remove the saved token                                                                                |
+| `/version`   | print the CLI version                                                                                 |
+| `/exit`      | quit                                                                                                  |
+
+Every menu in the CLI (slash commands, `@`-files, model picker, session picker, followups) is navigable with `↑`/`↓` and selectable with `enter`. A partial command like `/mod` + `enter` runs the highlighted match.
+
+## Keyboard shortcuts
+
+| key                 | action                                                                 |
+| ------------------- | ---------------------------------------------------------------------- |
+| `Esc`               | interrupt the running turn (or cancel login polling / close a menu)    |
+| `Ctrl+C`            | quit                                                                   |
+| `Ctrl+O`            | toggle thinking display for the whole transcript (past turns included) |
+| `Shift+Tab`         | cycle approval mode: ask → accept edits → auto-approve                 |
+| `↑` / `↓`           | input history, or navigate any open menu                               |
+| `Ctrl+A` / `Ctrl+E` | start / end of line                                                    |
+| `Ctrl+U`            | clear the input line                                                   |
+
+## Approvals & safety
+
+Read-only tools (read/list/search/web/todos) run without prompting. Mutating tools prompt first:
+
+- **File edits** (`file_edit`, `multi_file_edit`, `file_write`) — prompt shows the target; `y` allow once, `n` deny, `a` allow for the rest of the session.
+- **Commands** (`execute_command`) — prompt shows the exact command line. The model classifies commands with an `isDangerous` flag; dangerous commands (deletes, force-pushes, system changes) can **never** be auto-approved — no `a` option, and `--yolo`/session-approval don't apply.
+
+A denial is reported back to the model as "The user denied this operation." so it can adjust course rather than fail.
+
+<Note>
+  Use `Shift+Tab` at runtime to cycle the approval mode: **ask** → **accept
+  edits on** → **auto-approve**. The session defaults can also be set in
+  `settings.json` via `autoApproveEdits` and `autoApproveSafeCommands`
+  (dangerous commands still always prompt).
+</Note>
+
+## Sessions
+
+Sessions are stored in `~/.orbcode/sessions/<id>.json` and power `/resume` and `--resume <id>`. The backend-generated task title is fetched once per task and shows in the status bar, the session file, and the terminal window title: `<title> (orbcode)`.
+
+## Tools
+
+Active in the CLI (schemas byte-identical to the extension's native tools):
+
+| tool                       | executor notes                                                                               |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| `read_file`                | line-numbered output, 1000-line cap, offset/limit                                            |
+| `file_edit`                | single replacement; unique-match enforcement; `replace_all`; empty `old_string` = whole file |
+| `multi_file_edit`          | batched edits grouped per file, per-edit OK/FAILED results                                   |
+| `file_write`               | creates parent dirs, full-content writes                                                     |
+| `list_files`               | optional recursive, ignores node_modules/.git/build dirs, 800-entry cap                      |
+| `search_files`             | regex search with glob `file_pattern`, 300-match cap, binary skip                            |
+| `execute_command`          | user's shell, 120s timeout, 30k output cap, optional cwd                                     |
+| `web_search` / `web_fetch` | proxied through the MatterAI backend with your token                                         |
+| `update_todo_list`         | drives the TUI todo panel                                                                    |
+| `ask_followup_question`    | interactive menu in the TUI                                                                  |
+| `attempt_completion`       | ends the turn with a completion card                                                         |

@@ -58,6 +58,16 @@
             "pages": ["orbital/install", "orbital/overview", "orbital/pricing"]
           },
           {
+            "group": "OrbCode CLI",
+            "icon": "terminal",
+            "pages": [
+              "orbcode-cli/overview",
+              "orbcode-cli/install",
+              "orbcode-cli/usage",
+              "orbcode-cli/configuration"
+            ]
+          },
+          {
             "group": "LLM Models and Pricing",
             "icon": "brain-circuit",
             "pages": [

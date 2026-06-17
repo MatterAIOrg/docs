@@ -1,0 +1,108 @@
+---
+title: "OrbCode CLI"
+sidebarTitle: "Overview"
+description: "Agentic coding in your terminal, powered by Axon models by MatterAI"
+---
+
+OrbCode CLI is a standalone terminal coding agent powered by **Axon models by MatterAI**. It is a terminal port of the Orbital extension: the same Axon models, the same native tool schemas, and the same MatterAI auth backend, rebuilt from scratch as an interactive TUI with streaming chat, live thinking display, tool activity rows, edit/command approvals, and todo tracking.
+
+<Frame>
+  <img
+    src="https://github.com/MatterAIOrg/OrbCode/blob/main/assets/orbcode-screenshot.webp?raw=true"
+    alt="OrbCode CLI interactive TUI"
+  />
+</Frame>
+
+## Why OrbCode CLI
+
+- **Agentic in the terminal** — read, edit, search, and run commands across your whole workspace without leaving the shell.
+- **Same Axon models as Orbital** — `axon-eido-3-code-pro`, `axon-code-2-5-pro`, and `axon-code-2-5-mini`, with native JSON tool calls and image input.
+- **Streaming TUI** — markdown rendering, live reasoning under a collapsible "Thinking" block, and per-tool activity rows with diffs.
+- **Approvals & safety** — read-only tools run freely; file edits and commands prompt first, and dangerous commands can never be auto-approved.
+- **Headless mode** — pipe a single prompt with `-p` for scripts and CI.
+- **Claude-Code-compatible hooks** — block, auto-approve, rewrite, or inject context at fixed points in the agent loop.
+
+<CardGroup cols={2}>
+  <Card title="Install OrbCode CLI" icon="download" href="/orbcode-cli/install">
+    Get the CLI running in under a minute
+  </Card>
+  <Card title="Usage & Commands" icon="terminal" href="/orbcode-cli/usage">
+    Slash commands, shortcuts, and headless mode
+  </Card>
+  <Card title="Configuration" icon="gear" href="/orbcode-cli/configuration">
+    settings.json, env vars, and custom models
+  </Card>
+  <Card
+    title="View on GitHub"
+    icon="github"
+    href="https://github.com/MatterAIOrg/OrbCode"
+  >
+    Source code, issues, and releases
+  </Card>
+</CardGroup>
+
+## Quick start
+
+Requires **Node.js >= 20**.
+
+```bash
+npm install -g @matterailab/orbcode
+```
+
+Then, from any project directory:
+
+```bash
+orbcode
+```
+
+Sign in once with `orbcode login` (browser device flow), or set an API key in `~/.orbcode/settings.json`. See [Install](/orbcode-cli/install) for details.
+
+## Models
+
+The Axon models are built in; `/model` opens a scroll-and-select picker. Additional models can be declared via `customModels` in `settings.json`. The choice persists across sessions.
+
+| id                     | context | max output | pricing            |
+| ---------------------- | ------- | ---------- | ------------------ |
+| `axon-eido-3-code-pro` | 400k    | 64k        | $3/M in · $9/M out |
+| `axon-code-2-5-pro`    | 400k    | 64k        | $2/M in · $6/M out |
+| `axon-code-2-5-mini`   | 400k    | 64k        | free               |
+
+`axon-code-2-5-pro` is the default. All three support native JSON tool calls and image input. Cost comes from the API's usage chunks and is shown in the status bar.
+
+## The TUI
+
+- **Streaming responses** rendered as markdown (headers, lists, code fences, inline code, links) via a lightweight ANSI renderer.
+- **Thinking** — reasoning streams live under `✦ Thinking…` and collapses to `✦ Thought for Ns` when done. `Ctrl+O` toggles expanded thinking.
+- **Tool rows** — each tool call shows a formatted name, a one-line summary, live "running" state, then `✓`/`✗` with a short result preview.
+- **Edit diffs** — file-modifying tools render a real diff with a stats header and red/green backgrounds, both in the approval prompt and the finished tool row.
+- **Tasks** — the model maintains a checklist via `update_todo_list`, rendered as a compact Tasks panel.
+- **@-references** — type `@` in the input to fuzzy-search workspace files.
+- **Status bar** — approval mode, busy state, model name, context token usage, and session cost.
+
+## Approvals & safety
+
+Read-only tools (read/list/search/web/todos) run without prompting. Mutating tools prompt first:
+
+- **File edits** — prompt shows the target; `y` allow once, `n` deny, `a` allow for the rest of the session.
+- **Commands** — prompt shows the exact command line. Dangerous commands (deletes, force-pushes, system changes) can **never** be auto-approved.
+
+A denial is reported back to the model so it can adjust course rather than fail. See [Usage](/orbcode-cli/usage) for the full approval model.
+
+## Headless mode
+
+```bash
+orbcode -p "explain the build pipeline in this repo"
+orbcode -p "fix the lint errors" --yolo
+```
+
+Prints **only the final content** to stdout. Without `--yolo`, edit/command approvals are auto-denied (read-only analysis). Errors go to stderr.
+
+## Architecture
+
+OrbCode CLI faithfully ports the Orbital extension's tool schemas, system prompt, and streaming handler quirks. Requests carry extension-compatible headers (`X-AxonCode-Version`, `X-AxonCode-TaskId`, `X-AXON-REPO`), and usage data is fetched from the same `/axoncode/profile` endpoint as the extension.
+
+<Note>
+  OrbCode CLI is open source under the MIT license. The complete, example-driven
+  reference for lifecycle hooks is in the [GitHub
+  repository](https://github.com/MatterAIOrg/OrbCode/blob/main/docs/HOOKS.md).
+</Note>

@@ -1,0 +1,147 @@
+---
+title: "OrbCode CLI Configuration"
+sidebarTitle: "Configuration"
+description: "settings.json, environment variables, custom models, and hooks"
+---
+
+# Configuration
+
+OrbCode CLI stores its state and configuration under `~/.orbcode/`. Two files live there:
+
+- **`config.json`** — state written by the app itself (login token, chosen model, approval defaults). Created on first save, mode `0600`.
+- **`settings.json`** — user-managed configuration, Claude-Code style. Created automatically as an empty `{}` on first run so it's easy to find. A project-level `.orbcode/settings.json` in the working directory layers on top of the user-level file.
+
+## settings.json
+
+```json
+{
+  "apiKey": "<token used instead of logging in>",
+  "baseUrl": "https://my-gateway.example.com/v1",
+  "model": "my-custom-model",
+  "autoApproveEdits": false,
+  "autoApproveSafeCommands": false,
+  "customModels": [
+    {
+      "id": "my-custom-model",
+      "name": "My Custom Model",
+      "contextWindow": 128000,
+      "maxOutputTokens": 32000,
+      "inputPrice": 0.000001,
+      "outputPrice": 0.000002
+    }
+  ],
+  "env": { "MY_VAR": "value" }
+}
+```
+
+All keys are optional.
+
+| key                       | effect                                                                              |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| `apiKey`                  | token used instead of logging in                                                    |
+| `baseUrl`                 | point the chat client at any OpenAI-compatible gateway                              |
+| `model`                   | default model id                                                                    |
+| `autoApproveEdits`        | session default for file-edit approvals                                             |
+| `autoApproveSafeCommands` | session default for safe command approvals (dangerous commands still always prompt) |
+| `customModels`            | extra models that appear in the `/model` picker alongside the built-in Axon models  |
+| `env`                     | applied to the process at startup                                                   |
+| `hooks`                   | lifecycle hooks (see below)                                                         |
+
+Precedence: env vars > project `settings.json` > user `settings.json` > `config.json`.
+
+## Environment variables
+
+| env var               | effect                                                            |
+| --------------------- | ----------------------------------------------------------------- |
+| `ORBCODE_TOKEN`       | auth token (overrides everything)                                 |
+| `ORBCODE_API_KEY`     | same as `apiKey` in settings.json                                 |
+| `ORBCODE_BASE_URL`    | same as `baseUrl` in settings.json                                |
+| `ORBCODE_MODEL`       | model override (what `--model` sets internally)                   |
+| `ORBCODE_CONFIG_DIR`  | config directory (default `~/.orbcode`)                           |
+| `ORBCODE_BACKEND_URL` | device-auth backend (default `https://api.matterai.so`)           |
+| `ORBCODE_APP_URL`     | webapp for the authorize page (default `https://app.matterai.so`) |
+
+## Custom models
+
+`customModels` entries appear in the `/model` picker alongside the built-in Axon models. Each entry needs an `id`, a display `name`, a `contextWindow`, and `maxOutputTokens`. Optional `inputPrice` / `outputPrice` (per token) drive the status-bar cost display.
+
+`baseUrl` points the chat client at any OpenAI-compatible gateway, so you can route OrbCode through your own infrastructure while keeping the same TUI and tooling.
+
+## Sessions
+
+Sessions are stored in `~/.orbcode/sessions/<id>.json` and power `/resume` and `--resume <id>`. Each session records the conversation, tool results, task title, and cost.
+
+## Hooks
+
+Hooks are shell commands OrbCode runs at fixed points in the agent loop. They use the **same contract as Claude Code's hooks**, so scripts written for it work here (just use `$ORBCODE_PROJECT_DIR` and OrbCode's tool names).
+
+Use them to **block** dangerous actions, **auto-approve** trusted ones, **rewrite** tool inputs, **inject context** into the model, **format code** after edits, **notify** you, or **keep the agent working** until a condition is met.
+
+### Two-minute example
+
+Block `rm -rf` and append the git branch to every prompt.
+
+**1.** Drop a guard script at `~/.orbcode/hooks/guard.sh` (and `chmod +x` it):
+
+```bash
+#!/usr/bin/env bash
+input=$(cat)                                    # OrbCode sends JSON on stdin
+cmd=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
+if printf '%s' "$cmd" | grep -Eq 'rm -rf (/|~|\*)'; then
+  echo "Refusing destructive command: $cmd" >&2 # stderr = the reason
+  exit 2                                         # exit 2 = block the tool
+fi
+exit 0
+```
+
+**2.** Register it in `~/.orbcode/settings.json` (user-level) or a project's `.orbcode/settings.json` — both are **merged**, so projects can add hooks without clobbering your global ones.
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "execute_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.orbcode/hooks/guard.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Git branch: $(git branch --show-current 2>/dev/null)\""
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Events at a glance
+
+| event              | when it fires                                 | matcher tests |
+| ------------------ | --------------------------------------------- | ------------- |
+| `SessionStart`     | first turn of a session (or after `--resume`) | `source`      |
+| `UserPromptSubmit` | before each prompt is sent to the model       | —             |
+| `PreToolUse`       | before a tool runs (and before its approval)  | tool name     |
+| `PostToolUse`      | after a tool returns                          | tool name     |
+| `Notification`     | when OrbCode needs permission or a follow-up  | —             |
+| `Stop`             | when the model is about to finish the turn    | —             |
+| `PreCompact`       | before `/compact` summarizes the conversation | `trigger`     |
+| `SessionEnd`       | on quit, `/logout`, or end of a `-p` run      | `reason`      |
+
+A hook receives a JSON payload on **stdin** and influences OrbCode via its **exit code** — `0` success, `2` block (stderr is the reason), other = non-blocking warning — and/or a **JSON object on stdout** for fine control (`decision`, `continue`, `systemMessage`, and a `hookSpecificOutput` with `permissionDecision` allow/deny/ask, `updatedInput`, `additionalContext`).
+
+<Note>
+Hooks run with a **redacted environment** (your API token and other credential-like vars are stripped), and injected context is wrapped in `<hook_context>` tags the model treats as untrusted. Project hooks are disabled until you approve them in a one-time trust prompt, since they run shell commands from a repo.
+</Note>
+
+The complete, example-driven reference — per-event input/output, a copy-paste cookbook, debugging, and security — is in [docs/HOOKS.md](https://github.com/MatterAIOrg/OrbCode/blob/main/docs/HOOKS.md) on GitHub.

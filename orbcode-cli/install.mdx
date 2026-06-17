@@ -1,0 +1,104 @@
+---
+title: "Install OrbCode CLI"
+sidebarTitle: "Install"
+description: "Install and authenticate the OrbCode CLI on your machine"
+---
+
+# Install OrbCode CLI
+
+OrbCode CLI runs on any system with **Node.js >= 20**. Install it globally from npm, then sign in with your MatterAI account.
+
+## Prerequisites
+
+<Check>
+  **Node.js >= 20** — check with `node --version`
+</Check>
+
+<Check>
+  A **MatterAI account** — sign up at [app.matterai.so](https://app.matterai.so)
+  if you don't have one
+</Check>
+
+## Install from npm
+
+```bash
+npm install -g @matterailab/orbcode
+```
+
+Verify the install:
+
+```bash
+orbcode --version
+```
+
+## Install from source (development)
+
+```bash
+git clone https://github.com/MatterAIOrg/OrbCode.git
+cd OrbCode
+npm install
+npm run build
+npm link        # exposes the global `orbcode` command
+```
+
+`npm link` creates a **symlink** to the repo, so after pulling changes you only need to rebuild — no relink required:
+
+```bash
+npm run build   # the linked `orbcode` command picks this up immediately
+```
+
+Relink only when the package **name or bin entry changes**:
+
+```bash
+npm unlink -g orbitalcode   # remove a stale link under the old name (once)
+npm link
+```
+
+<Warning>
+  The version reported by `orbcode --version` is read from `package.json` at
+  runtime. If `--version` shows an old version after pulling, rebuild with `npm
+  run build`.
+</Warning>
+
+## Authentication
+
+Browser-based device flow with polling (no copy/paste needed).
+
+<Steps>
+  <Step title="Start the login flow">
+    Run `orbcode login` (or `/login` inside the TUI). The CLI calls `POST /orbcode/auth/start` on the MatterAI backend, which issues a one-time device code (10-minute lifetime).
+  </Step>
+  <Step title="Authorize in the browser">
+    The CLI opens `https://app.matterai.so/orbital?loginType=orbcode&devicecode=<code>` in your browser. If you're already signed in, the **Authorize OrbCode CLI** dialog appears immediately; otherwise you're redirected to sign in first.
+  </Step>
+  <Step title="Click Authorize">
+    Clicking **Authorize** binds your session token to the device code. The CLI polls the backend every 3 seconds and picks up the token exactly once.
+  </Step>
+  <Step title="Start coding">
+    The CLI verifies the token against the profile endpoint, saves it, and you're ready to go. Sign out anytime with `/logout`.
+  </Step>
+</Steps>
+
+### Alternative authentication
+
+You can skip the browser flow entirely:
+
+- **API key in settings.json** — set `apiKey` in `~/.orbcode/settings.json` (or a project's `.orbcode/settings.json`).
+- **Env token** — set `ORBCODE_TOKEN` to skip login entirely (takes precedence over everything).
+
+<Note>
+  Tokens are MatterAI JWTs. A token whose payload has `env: "development"`
+  automatically routes API calls to `http://localhost:3000`, matching the
+  extension's behavior.
+</Note>
+
+## Troubleshooting
+
+| Problem                          | Fix                                                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `orbcode: command not found`     | Run `npm link` in the repo; ensure `npm prefix -g`'s bin dir is on your PATH.                        |
+| `--version` shows an old version | Rebuild with `npm run build`; the linked command runs `dist/`.                                       |
+| Stale link after the rename      | `npm unlink -g orbitalcode && npm link`.                                                             |
+| Login times out                  | The device code lives 10 minutes; press Enter to retry, or paste a token manually.                   |
+| 401 on chat                      | Token expired: `/logout` then `/login`.                                                              |
+| Keyboard input does nothing      | OrbCode needs a real TTY (raw mode); it won't accept piped stdin. Use `-p` for non-interactive runs. |
