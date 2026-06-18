@@ -32,6 +32,9 @@ OrbCode CLI is a standalone terminal coding agent powered by **Axon models by Ma
   <Card title="Configuration" icon="gear" href="/orbcode-cli/configuration">
     settings.json, env vars, and custom models
   </Card>
+  <Card title="Hooks" icon="link" href="/orbcode-cli/hooks">
+    Block, auto-approve, rewrite, or inject context at fixed points
+  </Card>
   <Card
     title="View on GitHub"
     icon="github"
@@ -102,7 +105,6 @@ Prints **only the final content** to stdout. Without `--yolo`, edit/command appr
 OrbCode CLI faithfully ports the Orbital extension's tool schemas, system prompt, and streaming handler quirks. Requests carry extension-compatible headers (`X-AxonCode-Version`, `X-AxonCode-TaskId`, `X-AXON-REPO`), and usage data is fetched from the same `/axoncode/profile` endpoint as the extension.
 
 <Note>
-  OrbCode CLI is open source under the MIT license. The complete, example-driven
-  reference for lifecycle hooks is in the [GitHub
-  repository](https://github.com/MatterAIOrg/OrbCode/blob/main/docs/HOOKS.md).
+  OrbCode CLI is open source under the MIT license. The full hooks reference
+  lives on the [Hooks page](/orbcode-cli/hooks).
 </Note>

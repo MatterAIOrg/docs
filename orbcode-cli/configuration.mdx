@@ -1,7 +1,7 @@
 ---
 title: "OrbCode CLI Configuration"
 sidebarTitle: "Configuration"
-description: "settings.json, environment variables, custom models, and hooks"
+description: "settings.json, environment variables, custom models, providers, and sessions"
 ---
 
 # Configuration
@@ -11,7 +11,29 @@ OrbCode CLI stores its state and configuration under `~/.orbcode/`. Two files li
 - **`config.json`** — state written by the app itself (login token, chosen model, approval defaults). Created on first save, mode `0600`.
 - **`settings.json`** — user-managed configuration, Claude-Code style. Created automatically as an empty `{}` on first run so it's easy to find. A project-level `.orbcode/settings.json` in the working directory layers on top of the user-level file.
 
-## settings.json
+<CardGroup cols={2}>
+  <Card title="Lifecycle hooks" icon="link" href="/orbcode-cli/hooks">
+    Block, auto-approve, rewrite, or inject context at fixed points in the agent loop
+  </Card>
+  <Card title="Install & authentication" icon="key" href="/orbcode-cli/install">
+    First-run setup, login, and troubleshooting
+  </Card>
+</CardGroup>
+
+## File layout
+
+| Path | Written by | Mode | Purpose |
+| --- | --- | --- | --- |
+| `~/.orbcode/config.json` | the app | `0600` | login token, model, approval defaults |
+| `~/.orbcode/settings.json` | you (user) | `0644` | user-level config; merged in |
+| `<project>/.orbcode/settings.json` | you (project) | `0644` | project-level config, layered on top |
+| `~/.orbcode/sessions/<id>.json` | the app | `0600` | saved sessions for `/resume` and `--resume` |
+| `~/.orbcode/hook-trust.json` | the app | `0600` | your trust decisions for project hooks |
+| `~/.orbcode/snapshots/…` | hooks | `0644` | optional: pre-compact transcript snapshots |
+
+Override the config directory with `MATTERAI_CONFIG_DIR`.
+
+## settings.json (full reference)
 
 ```json
 {
@@ -30,118 +52,124 @@ OrbCode CLI stores its state and configuration under `~/.orbcode/`. Two files li
       "outputPrice": 0.000002
     }
   ],
-  "env": { "MY_VAR": "value" }
+  "env": { "MY_VAR": "value" },
+  "hooks": { "PreToolUse": [] }
 }
 ```
 
 All keys are optional.
 
-| key                       | effect                                                                              |
-| ------------------------- | ----------------------------------------------------------------------------------- |
-| `apiKey`                  | token used instead of logging in                                                    |
-| `baseUrl`                 | point the chat client at any OpenAI-compatible gateway                              |
-| `model`                   | default model id                                                                    |
-| `autoApproveEdits`        | session default for file-edit approvals                                             |
-| `autoApproveSafeCommands` | session default for safe command approvals (dangerous commands still always prompt) |
-| `customModels`            | extra models that appear in the `/model` picker alongside the built-in Axon models  |
-| `env`                     | applied to the process at startup                                                   |
-| `hooks`                   | lifecycle hooks (see below)                                                         |
+| key | type | default | effect |
+| --- | --- | --- | --- |
+| `apiKey` | string | — | token used instead of logging in. Takes precedence over `MATTERAI_TOKEN` only if `MATTERAI_TOKEN` is unset. |
+| `baseUrl` | string | MatterAI gateway | point the chat client at any OpenAI-compatible gateway. Honoured when the chosen model has no `provider` (or `provider: "matterai"`). |
+| `model` | string | `axon-code-2-5-pro` | default model id. Overridden by `--model`/`-m` on the CLI. |
+| `autoApproveEdits` | boolean | `false` | session default for file-edit approvals (`y` vs. prompt). Dangerous commands still always prompt. |
+| `autoApproveSafeCommands` | boolean | `false` | session default for safe command approvals. Dangerous commands are never auto-approved. |
+| `customModels` | array | `[]` | extra models that appear in the `/model` picker alongside the built-in Axon models. See [Custom models](#custom-models). |
+| `env` | object | `{}` | applied to the process at startup (e.g. `{"NODE_ENV":"development"}`). |
+| `hooks` | object | `{}` | lifecycle hooks. See the [Hooks reference](/orbcode-cli/hooks). |
 
-Precedence: env vars > project `settings.json` > user `settings.json` > `config.json`.
+### Precedence
+
+For the same key, the order is:
+
+1. **Environment variables** (always win, e.g. `MATTERAI_TOKEN`, `MATTERAI_MODEL`).
+2. **Project** `.orbcode/settings.json` (in the working directory).
+3. **User** `~/.orbcode/settings.json`.
+4. **`config.json`** (state the app wrote for itself).
+
+For `hooks`, user and project files are **merged** — projects can add hooks without clobbering yours (see [Where hooks live](/orbcode-cli/hooks#where-hooks-live)).
 
 ## Environment variables
 
-| env var               | effect                                                            |
-| --------------------- | ----------------------------------------------------------------- |
-| `MATTERAI_TOKEN`       | auth token (overrides everything)                                 |
-| `MATTERAI_API_KEY`     | same as `apiKey` in settings.json                                 |
-| `MATTERAI_BASE_URL`    | same as `baseUrl` in settings.json                                |
-| `MATTERAI_MODEL`       | model override (what `--model` sets internally)                   |
-| `MATTERAI_CONFIG_DIR`  | config directory (default `~/.orbcode`)                           |
-| `MATTERAI_BACKEND_URL` | device-auth backend (default `https://api.matterai.so`)           |
-| `MATTERAI_APP_URL`     | webapp for the authorize page (default `https://app.matterai.so`) |
+| env var | effect |
+| --- | --- |
+| `MATTERAI_TOKEN` | auth token (overrides everything, including `apiKey` in settings) |
+| `MATTERAI_API_KEY` | same as `apiKey` in `settings.json` |
+| `MATTERAI_BASE_URL` | same as `baseUrl` in `settings.json` |
+| `MATTERAI_MODEL` | model override (what `--model` sets internally) |
+| `MATTERAI_CONFIG_DIR` | config directory (default `~/.orbcode`) |
+| `MATTERAI_BACKEND_URL` | device-auth backend (default `https://api.matterai.so`) |
+| `MATTERAI_APP_URL` | webapp for the authorize page (default `https://app.matterai.so`) |
+| `MATTERAI_TRUST_PROJECT_HOOKS` | set to `1` to auto-trust project hooks in non-interactive (`-p`) mode; ignored in interactive sessions |
+
+For the device flow, `MATTERAI_BACKEND_URL` and `MATTERAI_APP_URL` are useful against a local stack.
 
 ## Custom models
 
 `customModels` entries appear in the `/model` picker alongside the built-in Axon models. Each entry needs an `id`, a display `name`, a `contextWindow`, and `maxOutputTokens`. Optional `inputPrice` / `outputPrice` (per token) drive the status-bar cost display.
 
-`baseUrl` points the chat client at any OpenAI-compatible gateway, so you can route OrbCode through your own infrastructure while keeping the same TUI and tooling.
-
-## Sessions
-
-Sessions are stored in `~/.orbcode/sessions/<id>.json` and power `/resume` and `--resume <id>`. Each session records the conversation, tool results, task title, and cost.
-
-## Hooks
-
-Hooks are shell commands OrbCode runs at fixed points in the agent loop. They use the **same contract as Claude Code's hooks**, so scripts written for it work here (just use `$MATTERAI_PROJECT_DIR` and OrbCode's tool names).
-
-Use them to **block** dangerous actions, **auto-approve** trusted ones, **rewrite** tool inputs, **inject context** into the model, **format code** after edits, **notify** you, or **keep the agent working** until a condition is met.
-
-### Two-minute example
-
-Block `rm -rf` and append the git branch to every prompt.
-
-**1.** Drop a guard script at `~/.orbcode/hooks/guard.sh` (and `chmod +x` it):
-
-```bash
-#!/usr/bin/env bash
-input=$(cat)                                    # OrbCode sends JSON on stdin
-cmd=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
-if printf '%s' "$cmd" | grep -Eq 'rm -rf (/|~|\*)'; then
-  echo "Refusing destructive command: $cmd" >&2 # stderr = the reason
-  exit 2                                         # exit 2 = block the tool
-fi
-exit 0
-```
-
-**2.** Register it in `~/.orbcode/settings.json` (user-level) or a project's `.orbcode/settings.json` — both are **merged**, so projects can add hooks without clobbering your global ones.
-
 ```json
 {
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "execute_command",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.orbcode/hooks/guard.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"Git branch: $(git branch --show-current 2>/dev/null)\""
-          }
-        ]
-      }
-    ]
-  }
+  "customModels": [
+    {
+      "id": "my-custom-model",
+      "name": "My Custom Model",
+      "contextWindow": 128000,
+      "maxOutputTokens": 32000,
+      "inputPrice": 0.000001,
+      "outputPrice": 0.000002
+    }
+  ]
 }
 ```
 
-### Events at a glance
+### Other providers (Anthropic, OpenAI-compatible)
 
-| event              | when it fires                                 | matcher tests |
-| ------------------ | --------------------------------------------- | ------------- |
-| `SessionStart`     | first turn of a session (or after `--resume`) | `source`      |
-| `UserPromptSubmit` | before each prompt is sent to the model       | —             |
-| `PreToolUse`       | before a tool runs (and before its approval)  | tool name     |
-| `PostToolUse`      | after a tool returns                          | tool name     |
-| `Notification`     | when OrbCode needs permission or a follow-up  | —             |
-| `Stop`             | when the model is about to finish the turn    | —             |
-| `PreCompact`       | before `/compact` summarizes the conversation | `trigger`     |
-| `SessionEnd`       | on quit, `/logout`, or end of a `-p` run      | `reason`      |
+The Axon models go through the MatterAI gateway. A `customModels` entry that sets a `provider` is instead served through the [Vercel AI SDK](https://sdk.vercel.ai), reusing the same agent loop, tools, and approvals — auth is the provider's own key (env var or `apiKey`), not the MatterAI login.
 
-A hook receives a JSON payload on **stdin** and influences OrbCode via its **exit code** — `0` success, `2` block (stderr is the reason), other = non-blocking warning — and/or a **JSON object on stdout** for fine control (`decision`, `continue`, `systemMessage`, and a `hookSpecificOutput` with `permissionDecision` allow/deny/ask, `updatedInput`, `additionalContext`).
+```json
+{
+  "model": "claude-opus-4-8",
+  "customModels": [
+    {
+      "id": "claude-opus-4-8",
+      "name": "Claude Opus 4.8",
+      "provider": "anthropic",
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "inputPrice": 0.000005,
+      "outputPrice": 0.000025,
+      "effort": "high"
+    },
+    {
+      "id": "some-model",
+      "provider": "openai-compatible",
+      "baseUrl": "https://api.other-host.com/v1"
+    }
+  ]
+}
+```
+
+- `provider: "anthropic"` → native `/v1/messages` (`@ai-sdk/anthropic`). Key from `ANTHROPIC_API_KEY` (or `apiKey` on the entry). Adaptive thinking and reasoning streaming are on by default; `effort` (`low`…`max`) tunes depth; prompt caching breakpoints are set on the system prompt and conversation prefix automatically. Thinking blocks are preserved across turns (stored with the session and replayed with their signatures), so interleaved thinking with tool use round-trips correctly. Set `"reasoning": false` to disable thinking.
+- `provider: "openai-compatible"` → any OpenAI-compatible endpoint; requires `baseUrl`. Key from `apiKey` on the entry.
+
+Anything without a `provider` (or `provider: "matterai"`) keeps using the MatterAI gateway untouched. `baseUrl` only applies to the gateway path; for a custom provider, set `baseUrl` on the entry itself.
+
+## Sessions
+
+Sessions are stored in `~/.orbcode/sessions/<id>.json` and power `/resume` and `--resume <id>`. Each session records the conversation, tool results, task title, and cost. The backend-generated task title is fetched once per task and shows in the status bar, the session file, and the terminal window title (`<title> (orbcode)`).
+
+## Hooks (summary)
+
+`settings.json` can also declare `hooks`, a per-event list of shell commands that run at fixed points in the agent loop. They use the **same contract as Claude Code's hooks** (stdin JSON, exit-code protocol, JSON output schema).
+
+The full reference — every event, the JSON output schema, the exit-code protocol, a copy-paste cookbook, debugging, and security — is on the [Hooks page](/orbcode-cli/hooks).
 
 <Note>
-Hooks run with a **redacted environment** (your API token and other credential-like vars are stripped), and injected context is wrapped in `<hook_context>` tags the model treats as untrusted. Project hooks are disabled until you approve them in a one-time trust prompt, since they run shell commands from a repo.
+  Project-level hooks (`.orbcode/settings.json` inside a repo) are disabled
+  until you approve them in a one-time trust prompt, since they run shell
+  commands from a repo. See [Security on the Hooks
+  page](/orbcode-cli/hooks#security).
 </Note>
 
-The complete, example-driven reference — per-event input/output, a copy-paste cookbook, debugging, and security — is in [docs/HOOKS.md](https://github.com/MatterAIOrg/OrbCode/blob/main/docs/HOOKS.md) on GitHub.
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| `config.json` keeps reverting | That's expected — it's app state. Edit `settings.json` (or env vars) instead. |
+| `customModels` entry doesn't show in `/model` | Check that `id`, `name`, `contextWindow`, `maxOutputTokens` are all set; restart the session. |
+| `baseUrl` is being ignored | The chosen model has a `provider` set; move `baseUrl` onto the model entry. |
+| `MATTERAI_TOKEN` not picked up | Conflicting `apiKey` in `config.json` from a prior login — run `/logout` to clear it, or unset `MATTERAI_TOKEN` and re-login. |
+| Hook from a project never runs | Approve it in the one-time trust prompt, or set `MATTERAI_TRUST_PROJECT_HOOKS=1` for non-interactive runs. |

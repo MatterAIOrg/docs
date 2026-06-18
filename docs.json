@@ -64,7 +64,8 @@
               "orbcode-cli/overview",
               "orbcode-cli/install",
               "orbcode-cli/usage",
-              "orbcode-cli/configuration"
+              "orbcode-cli/configuration",
+              "orbcode-cli/hooks"
             ]
           },
           {
