@@ -63,7 +63,7 @@ All keys are optional.
 | --- | --- | --- | --- |
 | `apiKey` | string | — | token used instead of logging in. Takes precedence over `MATTERAI_TOKEN` only if `MATTERAI_TOKEN` is unset. |
 | `baseUrl` | string | MatterAI gateway | point the chat client at any OpenAI-compatible gateway. Honoured when the chosen model has no `provider` (or `provider: "matterai"`). |
-| `model` | string | `axon-code-2-5-pro` | default model id. Overridden by `--model`/`-m` on the CLI. |
+| `model` | string | `axon-eido-3-code-mini` | default model id. Overridden by `--model`/`-m` on the CLI. |
 | `autoApproveEdits` | boolean | `false` | session default for file-edit approvals (`y` vs. prompt). Dangerous commands still always prompt. |
 | `autoApproveSafeCommands` | boolean | `false` | session default for safe command approvals. Dangerous commands are never auto-approved. |
 | `customModels` | array | `[]` | extra models that appear in the `/model` picker alongside the built-in Axon models. See [Custom models](#custom-models). |
@@ -146,6 +146,19 @@ The Axon models go through the MatterAI gateway. A `customModels` entry that set
 - `provider: "openai-compatible"` → any OpenAI-compatible endpoint; requires `baseUrl`. Key from `apiKey` on the entry.
 
 Anything without a `provider` (or `provider: "matterai"`) keeps using the MatterAI gateway untouched. `baseUrl` only applies to the gateway path; for a custom provider, set `baseUrl` on the entry itself.
+
+## MCP servers
+
+OrbCode connects to external tools via the **Model Context Protocol** (MCP). Servers are configured in three scopes (user, project `.mcp.json`, local) and their tools appear alongside the native tools as `mcp__<server>__<tool>`. Manage them with the `orbcode mcp` subcommand or the `/mcp` slash command.
+
+The full reference — configuration scopes, server types (stdio/http/sse), the `orbcode mcp add/remove/list` CLI, OAuth and static-header auth, the interactive `/mcp` manager, and headless-mode behavior — is on the [MCP servers page](/orbcode-cli/mcp).
+
+## Skills & AGENTS.md memory
+
+- **Skills** — reusable instruction sets the model loads on demand. Place a `SKILL.md` under `~/.orbcode/skills/` (user) or `.orbcode/skills/` (project); the catalog is injected into the system prompt and `use_skill` loads the full body when a task matches.
+- **AGENTS.md memory** — project- and user-level instructions (build commands, code style, conventions) injected into every system prompt. OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename. Use `/init` to generate a starter file.
+
+The full reference — creating skills, the `SKILL.md` format, how skills are used, AGENTS.md discovery order, and `@include` directives — is on the [Skills & memory page](/orbcode-cli/skills).
 
 ## Sessions
 

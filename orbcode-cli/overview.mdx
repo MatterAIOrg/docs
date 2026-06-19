@@ -16,7 +16,10 @@ OrbCode CLI is a standalone terminal coding agent powered by **Axon models by Ma
 ## Why OrbCode CLI
 
 - **Agentic in the terminal** — read, edit, search, and run commands across your whole workspace without leaving the shell.
-- **Same Axon models as Orbital** — `axon-eido-3-code-pro`, `axon-code-2-5-pro`, and `axon-code-2-5-mini`, with native JSON tool calls and image input.
+- **Same Axon models as Orbital** — `axon-eido-3-code-pro`, `axon-eido-3-code-mini`, `axon-code-2-5-pro`, and `axon-code-2-5-mini`, with native JSON tool calls and image input.
+- **Multi-provider** — route to Anthropic Claude models or any OpenAI-compatible endpoint via the Vercel AI SDK, reusing the same agent loop, tools, and approvals.
+- **MCP servers** — connect external tools through the Model Context Protocol; servers appear as `mcp__<server>__<tool>` and can be called by the model.
+- **Skills & AGENTS.md memory** — load reusable instruction sets on demand, and inject project/user instructions into every system prompt.
 - **Streaming TUI** — markdown rendering, live reasoning under a collapsible "Thinking" block, and per-tool activity rows with diffs.
 - **Approvals & safety** — read-only tools run freely; file edits and commands prompt first, and dangerous commands can never be auto-approved.
 - **Headless mode** — pipe a single prompt with `-p` for scripts and CI.
@@ -31,6 +34,12 @@ OrbCode CLI is a standalone terminal coding agent powered by **Axon models by Ma
   </Card>
   <Card title="Configuration" icon="gear" href="/orbcode-cli/configuration">
     settings.json, env vars, and custom models
+  </Card>
+  <Card title="MCP servers" icon="plug" href="/orbcode-cli/mcp">
+    Connect external tools through the Model Context Protocol
+  </Card>
+  <Card title="Skills & memory" icon="book" href="/orbcode-cli/skills">
+    Reusable instruction sets and AGENTS.md project memory
   </Card>
   <Card title="Hooks" icon="link" href="/orbcode-cli/hooks">
     Block, auto-approve, rewrite, or inject context at fixed points
@@ -64,13 +73,23 @@ Sign in once with `orbcode login` (browser device flow), or set an API key in `~
 
 The Axon models are built in; `/model` opens a scroll-and-select picker. Additional models can be declared via `customModels` in `settings.json`. The choice persists across sessions.
 
-| id                     | context | max output | pricing            |
-| ---------------------- | ------- | ---------- | ------------------ |
-| `axon-eido-3-code-pro` | 400k    | 64k        | $3/M in · $9/M out |
-| `axon-code-2-5-pro`    | 400k    | 64k        | $2/M in · $6/M out |
-| `axon-code-2-5-mini`   | 400k    | 64k        | free               |
+| id                      | context | max output | pricing                |
+| ----------------------- | ------- | ---------- | ---------------------- |
+| `axon-eido-3-code-pro`  | 400k    | 64k        | $3/M in · $9/M out     |
+| `axon-eido-3-code-mini` | 400k    | 64k        | $1.5/M in · $4.5/M out |
+| `axon-code-2-5-pro`     | 400k    | 64k        | $2/M in · $6/M out     |
+| `axon-code-2-5-mini`    | 400k    | 64k        | free                   |
 
-`axon-code-2-5-pro` is the default. All three support native JSON tool calls and image input. Cost comes from the API's usage chunks and is shown in the status bar.
+`axon-eido-3-code-mini` is the default. All four support native JSON tool calls and image input. Cost comes from the API's usage chunks and is shown in the status bar.
+
+### Other providers
+
+A `customModels` entry that sets a `provider` is served through the [Vercel AI SDK](https://sdk.vercel.ai) instead of the MatterAI gateway, reusing the same agent loop, tools, and approvals. Auth is the provider's own key (env var or `apiKey`), not the MatterAI login.
+
+- `provider: "anthropic"` → native `/v1/messages`. Built-in Claude models (Opus 4.8/4.7/4.6, Sonnet 4.6, Haiku 4.5, Fable 5) work headlessly via `--model claude-…` without a settings entry. Key from `ANTHROPIC_API_KEY`.
+- `provider: "openai-compatible"` → any OpenAI-compatible endpoint; requires `baseUrl`. Key from `apiKey` on the entry.
+
+See [Configuration](/orbcode-cli/configuration) for the full `customModels` schema.
 
 ## The TUI
 
@@ -99,6 +118,12 @@ orbcode -p "fix the lint errors" --yolo
 ```
 
 Prints **only the final content** to stdout. Without `--yolo`, edit/command approvals are auto-denied (read-only analysis). Errors go to stderr.
+
+## MCP servers, skills & memory
+
+- **MCP servers** — OrbCode connects to external tools via the Model Context Protocol. Servers are configured in three scopes (user, project `.mcp.json`, local) and their tools appear alongside the native tools as `mcp__<server>__<tool>`. Manage them with the `orbcode mcp` subcommand or the `/mcp` slash command. See the [MCP servers page](/orbcode-cli/mcp).
+- **Skills** — reusable instruction sets the model loads on demand. Place a `SKILL.md` under `~/.orbcode/skills/` (user) or `.orbcode/skills/` (project); the catalog is injected into the system prompt and `use_skill` loads the full body when a task matches. See the [Skills & memory page](/orbcode-cli/skills).
+- **AGENTS.md memory** — project- and user-level instructions (build commands, code style, conventions) injected into every system prompt. OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename. Use `/init` to generate a starter file.
 
 ## Architecture
 

@@ -65,6 +65,8 @@
               "orbcode-cli/install",
               "orbcode-cli/usage",
               "orbcode-cli/configuration",
+              "orbcode-cli/mcp",
+              "orbcode-cli/skills",
               "orbcode-cli/hooks"
             ]
           },
@@ -75,7 +77,13 @@
               "axon-overview",
               {
                 "group": "Models List",
-                "pages": ["axon-2-5-pro", "axon-2-5-mini"]
+                "pages": [
+                  "axon-eido-3-pro",
+                  "axon-eido-3-mini",
+                  "axon-eido-3-flash",
+                  "axon-2-5-pro",
+                  "axon-2-5-mini"
+                ]
               },
               "axon-ai/pricing",
               "axon-ai/api-keys",

@@ -1,0 +1,80 @@
+---
+title: "OrbCode CLI Skills & Memory"
+sidebarTitle: "Skills & Memory"
+description: "Reusable instruction sets (skills) and AGENTS.md project memory in OrbCode CLI"
+---
+
+# Skills & memory
+
+OrbCode can load reusable instruction sets on demand (**skills**) and inject project/user instructions into every system prompt (**AGENTS.md memory**). Both keep the model aligned with your project's conventions without repeating yourself in every prompt.
+
+<CardGroup cols={2}>
+  <Card title="MCP servers" icon="plug" href="/orbcode-cli/mcp">
+    Connect external tools through the Model Context Protocol
+  </Card>
+  <Card title="Configuration" icon="gear" href="/orbcode-cli/configuration">
+    settings.json, env vars, custom models, and sessions
+  </Card>
+</CardGroup>
+
+## Skills
+
+Skills are reusable instruction sets the model can load on demand. A skill is a directory containing a `SKILL.md` file with optional YAML frontmatter and a markdown body of specialized instructions.
+
+### Creating a skill
+
+Place a directory under `~/.orbcode/skills/` (user, applies everywhere) or `.orbcode/skills/` (project, checked into the repo):
+
+```
+~/.orbcode/skills/
+  my-skill/
+    SKILL.md
+```
+
+`SKILL.md` format:
+
+```markdown
+---
+description: Write concise, idiomatic Go code following project conventions
+when_to_use: the task involves writing or reviewing Go code
+---
+
+# Go style skill
+
+When writing Go in this project:
+- Use `errors.Join` for multi-error aggregation
+- Prefer table-driven tests
+```
+
+- `description` (frontmatter or first paragraph) — shown in the skill catalog.
+- `when_to_use` (frontmatter) — a hint telling the model when to invoke this skill.
+- `${SKILL_DIR}` in the body is replaced with the skill's absolute directory path, so you can reference bundled scripts.
+
+### How skills are used
+
+The skill catalog (names + descriptions + when-to-use) is injected into the system prompt. When a task matches a skill's `when_to_use` condition, the model calls the `use_skill` tool with the skill's name, which loads the full instructions into context. Project skills override user skills on name collisions (closer-to-cwd wins).
+
+## AGENTS.md memory
+
+AGENTS.md files provide project- and user-level instructions that are injected into every system prompt — build commands, code style, architecture notes, conventions. This is OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename so it works across tools.
+
+### Discovery
+
+Files are loaded in this order (lowest precedence first; higher-precedence files appear later and get more weight):
+
+1. **User memory** — `~/.orbcode/AGENTS.md` — personal global instructions.
+2. **Project memory** — `AGENTS.md` and `.orbcode/AGENTS.md` in the cwd and every parent directory (closer-to-cwd wins). Checked into the repo, shared with the team.
+3. **Local memory** — `AGENTS.local.md` in the cwd and parents — private per-machine overrides (gitignore this).
+
+### @include directives
+
+An AGENTS.md file can include other files with `@path` references:
+
+```markdown
+# Project guide
+
+See the detailed style guide: @./docs/style.md
+And the global one: @~/orbcode-global.md
+```
+
+`@path` (relative to the including file), `@./path`, `@~/path`, and `@/abs/path` are all supported. Includes are resolved recursively (up to 5 levels, with cycle detection). Use `/init` to have OrbCode generate a starter `AGENTS.md` by analyzing the codebase.

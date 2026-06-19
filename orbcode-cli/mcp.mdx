@@ -1,0 +1,181 @@
+---
+title: "OrbCode CLI MCP Servers"
+sidebarTitle: "MCP Servers"
+description: "Connect external tools to OrbCode CLI through the Model Context Protocol"
+---
+
+# MCP servers
+
+OrbCode connects to external tools via the **Model Context Protocol** (MCP). MCP servers expose tools that appear alongside the native tools as `mcp__<server>__<tool>` and can be called by the model like any other tool.
+
+<CardGroup cols={2}>
+  <Card title="Configuration" icon="gear" href="/orbcode-cli/configuration">
+    settings.json, env vars, custom models, and sessions
+  </Card>
+  <Card title="Skills & memory" icon="book" href="/orbcode-cli/skills">
+    Reusable instruction sets and AGENTS.md project memory
+  </Card>
+</CardGroup>
+
+## Configuration scopes
+
+MCP servers are configured in three scopes (highest precedence last):
+
+1. **User scope** — `mcpServers` in `~/.orbcode/settings.json`. Applies to every project on this machine.
+2. **Project scope** — `.mcp.json` in the project root (and parent directories, closer-to-cwd wins). This is the check-into-git, shared format, compatible with Claude Code's `.mcp.json`.
+3. **Local scope** — `mcpServers` in `.orbcode/settings.json`. Per-project, per-machine overrides (not checked in).
+
+`.mcp.json` format (project scope):
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/projects"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ${GITHUB_TOKEN}" }
+    }
+  }
+}
+```
+
+`settings.json` `mcpServers` (user/local scope) uses the same per-server shape. Environment variables (`${VAR}`) are expanded from `process.env`.
+
+## Server types
+
+Three server types are supported:
+
+- **stdio** (default, omit `type`) — OrbCode spawns `command` with `args` and talks over stdin/stdout. Optional `env` and `cwd`.
+- **http** — Streamable HTTP transport. `url` + optional `headers` + optional `oauth`.
+- **sse** — Server-Sent Events (legacy remote). `url` + optional `headers` + optional `oauth`.
+
+## Adding servers from the command line
+
+The `orbcode mcp` subcommand manages servers without editing JSON by hand:
+
+```bash
+# stdio (default transport): name + command + args
+orbcode mcp add filesystem npx -y @modelcontextprotocol/server-filesystem /Users/me/projects
+
+# http transport
+orbcode mcp add --transport http linear-server https://mcp.linear.app/mcp
+
+# sse transport with a header
+orbcode mcp add -t sse --header "Authorization=Bearer ${TOKEN}" my-sse https://example.com/sse
+
+# http with OAuth (auth from /mcp after adding)
+orbcode mcp add --transport http --oauth notion https://mcp.notion.com/mcp
+
+# stdio with env vars, written to user scope (~/.orbcode/settings.json)
+orbcode mcp add -s user -e API_KEY=secret -e DEBUG=true my-server node server.js
+
+# list all configured servers (name, scope, transport detail)
+orbcode mcp list
+
+# remove a server (finds it in whichever scope it lives)
+orbcode mcp remove filesystem
+```
+
+<Tip>
+  OrbCode's `mcp add` command is a drop-in replacement for Claude Code's
+  `claude mcp add`. Any `claude mcp add ...` command you find in third-party
+  MCP server docs works as-is — just swap `claude` for `orbcode`. For example,
+  `claude mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem`
+  becomes `orbcode mcp add filesystem -- npx -y @modelcontextprotocol/server-filesystem`.
+</Tip>
+
+Flags go before the server name; everything after the name is the command + args (so stdio servers can take their own flags like `-y`). Use `--` to force the split if needed (a `--` immediately after the server name is consumed as the separator, matching Claude Code's `claude mcp add <name> -- <command>`). `-s`/`--scope` selects `project` (default, writes `.mcp.json`), `user` (writes `~/.orbcode/settings.json`), or `local` (writes `.orbcode/settings.json`).
+
+`add` and `remove` print the file they modified:
+
+```
+$ orbcode mcp add --transport http linear-server https://mcp.linear.app/mcp
+Added HTTP MCP server linear-server
+  URL: https://mcp.linear.app/mcp
+  Scope: project
+  File modified: /Users/me/my-project/.mcp.json
+```
+
+## The `/mcp` interactive manager
+
+The `/mcp` command opens an interactive manager at any time:
+
+- ↑/↓ to select a server. The selected server shows a detail panel with **Status**, **Auth** (authenticated / not authenticated / static headers), **URL** (or stdio command), **Config location** (the file path), and a numbered action list.
+- **enter** or **2** toggles enable/disable. **r** or **3** reconnects. **a** or **1** authenticates a `needs-auth` OAuth server (opens a browser for the authorization-code flow; M2M grants exchange directly). **esc** closes.
+- Each server shows a live status icon: `✓ connected`, `△ needs-auth`, `✗ failed`, `○ disabled`, `⋯ connecting`, plus a tool count when connected.
+- Enable/disable choices are persisted per-project. OAuth tokens are persisted per-server under `~/.orbcode/mcp-auth/`.
+
+## Enabling & disabling servers
+
+- **User/local-scope servers** connect automatically on startup (you wrote them, so they're trusted).
+- **Project-scope servers** (from `.mcp.json`) require a one-time approval: on first launch in a project, OrbCode shows a checklist of detected servers. Select the ones you trust; the decision is persisted to `.orbcode/settings.json` (`enabledMcpServers` / `disabledMcpServers`) so they auto-connect on future sessions.
+
+## Authentication
+
+Remote servers (http/sse) often require auth. OrbCode supports three ways:
+
+**1. Static headers** (API keys, personal access tokens). Use `headers` with `${ENV_VAR}` expansion — the token is read from the environment, never written to disk:
+
+```json
+{
+  "github": {
+    "type": "http",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "headers": { "Authorization": "Bearer ${GITHUB_TOKEN}" }
+  }
+}
+```
+
+**2. OAuth 2.0 flows** (for servers that require user login: GitHub, Google Drive, Slack, Notion, …). Set `oauth: true` (or `{ "scope": "..." }`) on an http/sse server. OrbCode runs the full authorization-code flow via the SDK: RFC 9728 protected-resource discovery, RFC 8414 authorization-server metadata, PKCE, dynamic client registration, and token refresh. A one-shot loopback HTTP server receives the browser redirect. Tokens, client info, code verifiers, and discovery state are persisted per-server under `~/.orbcode/mcp-auth/<server>.json` (mode 0600) so re-auth is only needed when a token expires or is revoked.
+
+```json
+{
+  "notion": {
+    "type": "http",
+    "url": "https://mcp.notion.com/mcp",
+    "oauth": true
+  },
+  "google-drive": {
+    "type": "http",
+    "url": "https://mcp.google.com/drive",
+    "oauth": { "scope": "https://www.googleapis.com/auth/drive.readonly" }
+  }
+}
+```
+
+**3. Machine-to-machine OAuth** (no browser). For service-to-service auth, use `client_credentials` or `private_key_jwt` grants:
+
+```json
+{
+  "internal-api": {
+    "type": "http",
+    "url": "https://internal.example.com/mcp",
+    "oauth": {
+      "grantType": "client_credentials",
+      "clientId": "orbcode-client",
+      "clientSecret": "${INTERNAL_CLIENT_SECRET}",
+      "scope": "mcp:tools"
+    }
+  },
+  "jwt-api": {
+    "type": "http",
+    "url": "https://jwt.example.com/mcp",
+    "oauth": {
+      "grantType": "private_key_jwt",
+      "clientId": "orbcode-client",
+      "privateKey": "${JWT_PRIVATE_KEY_PEM}",
+      "algorithm": "RS256"
+    }
+  }
+}
+```
+
+When a server needs auth, its status shows `needs-auth` in `/mcp`; press **a** to re-authenticate (clears stored tokens and re-runs the flow). Secrets in `oauth` blocks support `${ENV_VAR}` expansion like `headers`, so client secrets and private keys can be sourced from the environment rather than committed to `.mcp.json`.
+
+## Headless mode
+
+In `orbcode -p`, there's no interactive approval, so project-scope servers are only connected if they were previously approved (via an interactive `/mcp` session). Unapproved project servers are skipped with a stderr note. User/local servers connect as usual.
