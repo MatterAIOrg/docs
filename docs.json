@@ -16,14 +16,19 @@
   },
   "seo": {
     "metatags": {
-      "og:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1767928546/og-image-matter_uglj27.png",
-      "og:title": "MatterAI Documentation | AI Super Intelligence",
-      "og:description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
+      "og:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1779722501/og-image-matter-new_kpallr.png",
+      "og:title": "MatterAI - Frontier LLM Intelligence at 70% Less Cost",
+      "og:description": "Get frontier LLM intelligence matching GPT-5.5 and Claude Opus 4.8 at 70% lower token cost. Run agentic coding and research with Axon.",
       "og:url": "https://docs.matterai.so",
-      "twitter:title": "MatterAI Documentation | Universal AI Super Intelligence",
-      "twitter:description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
-      "twitter:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1767928546/og-image-matter_uglj27.png",
-      "twitter:url": "https://x.com/matteraiorg"
+      "og:site_name": "MatterAI",
+      "og:type": "website",
+      "og:locale": "en_US",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@matteraidev",
+      "twitter:title": "MatterAI - Frontier LLM Intelligence at 70% Less Cost",
+      "twitter:description": "Get frontier LLM intelligence matching GPT-5.5 and Claude Opus 4.8 at 70% lower token cost.",
+      "twitter:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1779722501/og-image-matter-new_kpallr.png",
+      "twitter:url": "https://x.com/matteraidev"
     }
   },
   "search": {
