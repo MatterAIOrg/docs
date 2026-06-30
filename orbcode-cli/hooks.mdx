@@ -73,6 +73,13 @@ Hooks are configured under the `hooks` key of `settings.json`. OrbCode reads **t
 | `~/.orbcode/settings.json` | user (all projects) | personal guards, notifications |
 | `<project>/.orbcode/settings.json` | project (this repo) | repo-specific formatters, policies |
 
+<Note>
+  Project-level **`.orb/`** files (`AGENTS.md`, `links.json`) are read by both
+  the CLI and the [Orbital IDE extension](/changelog/orbital-changelog).
+  Hooks themselves stay in `.orbcode/settings.json` — `.orb/` does not store
+  hooks.
+</Note>
+
 User hooks always run. **Project hooks are disabled until you trust them** (they ship inside a repo and run shell commands — see [Security](#security)). Once trusted, a project can **add** hooks without clobbering your global ones — for a given event the user matchers come first, then the project matchers, and they all execute. Override the config directory with `MATTERAI_CONFIG_DIR`.
 
 Hooks are **not** written to `config.json` (the app's own state file) — they are configuration you own.

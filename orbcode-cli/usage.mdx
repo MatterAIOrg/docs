@@ -67,7 +67,9 @@ Slash commands are entered at the input prompt (start with `/`). Most have alias
 | `/tasks` | print the current task list |
 | `/status` | version, model, account, gateway, context usage, cost, approval modes |
 | `/usage` | fetch plan usage from `/axoncode/profile` (plan, tiered windows, reset date) |
-| `/init` | analyze the codebase and create/improve `AGENTS.md` |
+| `/init` | analyze the codebase and write a concise `.orb/AGENTS.md` for cold-start |
+| `/link` | manage linked repositories (other repos checked for impact on this one) |
+| `/migrate` | import MCP server configs from Claude Code / Claude Desktop |
 | `/mcp` | manage MCP servers — enable, disable, reconnect, view status & tool counts |
 | `/commit` | check pending changes and create detailed commits |
 | `/code-review` | expert review of pending changes: performance, security, bugs, tests |
@@ -163,7 +165,40 @@ Place a directory under `~/.orbcode/skills/` (user, applies everywhere) or `.orb
 
 AGENTS.md files provide project- and user-level instructions that are injected into every system prompt — build commands, code style, architecture notes, conventions. This is OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename so it works across tools.
 
-Files are loaded in this order (lowest precedence first): user memory (`~/.orbcode/AGENTS.md`), project memory (`AGENTS.md` and `.orbcode/AGENTS.md` in the cwd and parents), and local memory (`AGENTS.local.md`, private per-machine). Use `/init` to have OrbCode generate a starter `AGENTS.md` by analyzing the codebase. See the [Skills & memory page](/orbcode-cli/skills) for the discovery order and `@include` directives.
+Files are loaded in this order (lowest precedence first): user memory (`~/.orbcode/AGENTS.md`), project memory (`AGENTS.md` and `.orb/AGENTS.md` in the cwd and parents), and local memory (`AGENTS.local.md`, private per-machine). Use `/init` to have OrbCode generate or refine a starter `AGENTS.md` by analyzing the codebase. See the [Skills & memory page](/orbcode-cli/skills) for the discovery order and `@include` directives.
+
+## `/init` — generate `.orb/AGENTS.md`
+
+`/init` investigates the project (layout, key config files, a few representative sources) and writes a concise **`.orb/AGENTS.md`** at the repo root, capped at ~150 lines so it stays cheap to include in every future prompt. The generated file covers:
+
+1. What the project does (1-2 lines) and its main tech stack.
+2. Project structure — the key directories/files and what each is responsible for.
+3. Architecture — how the main pieces fit together (entry points, data/control flow).
+4. Business-logic mapping — the rules and invariants the model needs to honor.
+5. Code patterns and conventions — the idioms the codebase already uses.
+
+The prompt also tells the agent to **refine an existing `AGENTS.md`** rather than overwriting it, and to fold in any existing AI assistant rules (`CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`).
+
+The `.orb/` folder is shared with the [Orbital IDE extension](/changelog/orbital-changelog) — the same `AGENTS.md` is read by both, so a single source of truth covers your terminal and your editor.
+
+## `/link` — linked repositories
+
+`/link` opens an interactive manager for **linked repositories**: other repos on your machine whose `AGENTS.md` should be considered when you're working in this one, so a change here is checked for impact on (or propagated to) them.
+
+Each link is just a folder path — absolute, `~/path`, or relative to the project. Links are persisted per-project in **`.orb/links.json`** in the current repo:
+
+```json
+{
+  "links": [
+    { "path": "/Users/me/projects/shared-lib" },
+    { "path": "~/projects/design-system" }
+  ]
+}
+```
+
+At session start, OrbCode walks the links, reads each linked repo's `AGENTS.md` (from `.orb/`, `.orbital/`, or `.orbcode/`), and pulls them in **ahead of time** into the agent's environment details — the model sees them as part of the workspace before it starts working.
+
+`.orb/links.json` is **shared with the Orbital IDE extension** — links written by the IDE are honored by the CLI and vice versa, so the two tools stay in sync without a manual merge. Use `/link` (or the IDE's `/link`) to add or remove entries interactively.
 
 ## Tools
 

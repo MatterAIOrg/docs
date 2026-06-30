@@ -3,6 +3,65 @@ title: "Orbital IDE Changelog"
 description: "Latest updates and improvements for Orbital IDE"
 ---
 
+<Update label="June 30, 2026">
+## v6.4.7
+
+### Added
+
+- **Shared `.orb/` convention with OrbCode CLI.** `AGENTS.md` is now loaded from the repo-level `.orb/` directory (alongside the project root and legacy `.orbital/`), so the Orbital IDE extension and the OrbCode CLI read the same project memory. Machine and settings locations are unchanged.
+- **Linked-repositories service.** A new `src/services/links` module is the single source of truth for the linked-repo feature, sharing `.orb/links.json` and the produced environment context between the IDE extension and the CLI.
+- **`/link` built-in command.** A new slash command for managing Linked Repositories: reads the current list, drives add/remove via `ask_followup_question`, and writes `.orb/links.json` with verbatim user input. Resolution and validation of the folder path happens at read time so links written by either tool stay portable.
+
+### Changed
+
+- **`/init` reworked for cold-start.** Replaces the verbose `.roo/rules-*` per-mode layout with a single, concise `.orb/AGENTS.md` (project structure, architecture, business-logic mapping, code patterns/conventions) capped at ~150 lines so it stays cheap to include in every future prompt. Existing AI assistant rules (CLAUDE.md, Cursor, Copilot) are still folded in. Refines an existing `AGENTS.md` rather than overwriting it.
+- **Built-in commands spec.** The expected command list is now `commit`, `migrate`, `init`, `link`; `init` is asserted to target `.orb/AGENTS.md` with the new concise structure, and `link` is asserted to manage `.orb/links.json` via `ask_followup_question`.
+</Update>
+
+<Update label="June 25, 2026">
+## v6.4.6
+
+### Added
+
+- **Tiered usage support in `OutOfCreditsBanner`.** New `selectResetIso()` helper picks the correct reset time: when a tier is exhausted it surfaces the latest reset among exhausted windows; otherwise it falls back to the soonest upcoming reset, then to the legacy `creditsResetDate`. Banner label shortened from "Pro models limits reset at" to "Limits reset at".
+- **OrbCode CLI marketing card.** A third rotating marketing card in the welcome view pointing users at the CLI, joining the existing two on the 10-second rotation (`(prev + 1) % 3`).
+- **New custom icons in `utils/customIcons.tsx`.** `Folder01Icon`, `Folder02Icon`, `ArrowDown01Icon`, `AddCircleHalfDotIcon` and others added to support the refreshed MCP and history views.
+
+### Changed
+
+- **Axon Code → Orbital rebrand in copy.** `troubleMessage` string in `chat.json` and the consecutive-mistake-limit description in `settings.json` now read "Orbital" where they previously read "Axon Code".
+- **Axon marketing copy.** Welcome-view subtitle changed from "Frontier LLMs, fraction of the cost. Save 70% inference cost." to "Cut agent inference costs by 60% using Frontier Axon models".
+- **History UI refresh (`TaskItem`).** Visual and layout rework of the history list (90 insertions / 52 deletions).
+- **MCP UI refresh (`McpView`).** Major rework of the MCP view with a new icon set and updated i18n strings (283 insertions / 228 deletions across `McpView.tsx`, `mcp.json`, and `customIcons.tsx`).
+- **Login UI refresh (`KiloCodeAuth`, `ProfileView`, `WelcomeView`).** Consolidated the auth and welcome flows with refreshed i18n strings.
+- **Chat agent UI refresh.** Visual updates to `ChatRow`, `ExplorationGroupRow`, and `ReasoningBlock` (63 insertions / 61 deletions).
+- **Button UI refresh.** Updated button styles in `index.css` for consistency across surfaces (17 insertions / 5 deletions).
+
+### Fixed
+
+- **Stream idle timeout bumped to 180s.** `STREAM_IDLE_TIMEOUT_MS` raised from 60s to 180s to reduce false-positive timeouts during long-running streaming responses, especially with slower or more verbose model outputs.
+</Update>
+
+<Update label="June 23, 2026">
+## v6.4.4
+
+### Added
+
+- **Stream idle timeout**: 60s idle window on model stream consumption. If no chunk arrives within the window (network drop, socket close, server stall), a descriptive error is thrown so the catch block can persist the failure and surface a `streaming_failed` row to the UI.
+- **Stream disconnection UI surfacing**: New `streaming_failed` `ErrorRow` variant with a localized explanation of the likely cause for transport-level errors (ECONNRESET, socket hang up, fetch failed, ETIMEDOUT, ENOTFOUND, etc.), and a retry button matching the existing `Provider error:` behavior.
+- **`chat:apiRequest.streamDisconnected` i18n key**.
+
+### Fixed
+
+- **Ripgrep binary resolution on modern VS Code / Orbital hosts**: `@vscode/ripgrep-universal` nests the binary in a per-platform subfolder (`bin/{os}-{arch}/rg`) that the previous lookup chain did not check, causing `getBinPath` to return undefined and file searches to silently fail. Adds the universal package to the lookup chain with both `node_modules` and `node_modules.asar.unpacked` paths.
+- **Unified message queue**: Replaced the local `manualMessageQueue` with the shared `messageQueueService` as the single source of truth. Queued messages now stay visible in the UI until they are actually dispatched; `isWaitingForAskResponse` is set before dequeue so a follow-up message resolves the ask rather than being re-routed into the queue.
+
+### Changed
+
+- **About footer actions**: Export, import, and reset buttons now sit in a flex container with `gap-1.5` so the icon and label share a single evenly spaced row. Removed ad-hoc `pb-0.5` icon padding.
+- **Footer support copy**: Removed the dead Discord link; the message now ends at the Reddit mention.
+</Update>
+
 <Update label="May 21, 2026">
 ## v6.2.3
 

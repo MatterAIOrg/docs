@@ -325,6 +325,7 @@
             "group": "MatterAI Product Updates",
             "pages": [
               "changelog/orbital-changelog",
+              "changelog/orbcode-cli-changelog",
               "changelog/axon-models-changelog",
               "changelog/ai-code-reviews-changelog"
             ]

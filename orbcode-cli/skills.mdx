@@ -58,12 +58,14 @@ The skill catalog (names + descriptions + when-to-use) is injected into the syst
 
 AGENTS.md files provide project- and user-level instructions that are injected into every system prompt — build commands, code style, architecture notes, conventions. This is OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename so it works across tools.
 
+The repo-level file lives at **`.orb/AGENTS.md`** — the same folder the [Orbital IDE extension](/changelog/orbital-changelog) reads — so a single source of truth covers your terminal and your editor. Legacy `.orbcode/AGENTS.md` is still read for backward compatibility.
+
 ### Discovery
 
 Files are loaded in this order (lowest precedence first; higher-precedence files appear later and get more weight):
 
 1. **User memory** — `~/.orbcode/AGENTS.md` — personal global instructions.
-2. **Project memory** — `AGENTS.md` and `.orbcode/AGENTS.md` in the cwd and every parent directory (closer-to-cwd wins). Checked into the repo, shared with the team.
+2. **Project memory** — `AGENTS.md` and `.orb/AGENTS.md` (and legacy `.orbcode/AGENTS.md`) in the cwd and every parent directory (closer-to-cwd wins). Checked into the repo, shared with the team.
 3. **Local memory** — `AGENTS.local.md` in the cwd and parents — private per-machine overrides (gitignore this).
 
 ### @include directives
@@ -77,4 +79,16 @@ See the detailed style guide: @./docs/style.md
 And the global one: @~/orbcode-global.md
 ```
 
-`@path` (relative to the including file), `@./path`, `@~/path`, and `@/abs/path` are all supported. Includes are resolved recursively (up to 5 levels, with cycle detection). Use `/init` to have OrbCode generate a starter `AGENTS.md` by analyzing the codebase.
+`@path` (relative to the including file), `@./path`, `@~/path`, and `@/abs/path` are all supported. Includes are resolved recursively (up to 5 levels, with cycle detection).
+
+### `/init` — generate a starter `.orb/AGENTS.md`
+
+The `/init` slash command investigates the project (directory layout, key config files, a few representative source files) and writes a concise **`.orb/AGENTS.md`** at the repo root, capped at ~150 lines so it stays cheap to include in every future prompt. The generated file covers:
+
+1. What the project does (1-2 lines) and its main tech stack.
+2. Project structure — the key directories/files and what each is responsible for.
+3. Architecture — how the main pieces fit together (entry points, data/control flow).
+4. Business-logic mapping — the rules and invariants the model needs to honor.
+5. Code patterns and conventions — the idioms the codebase already uses.
+
+`/init` **refines an existing `AGENTS.md`** rather than overwriting it, and folds in any existing AI assistant rules (`CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`). Re-run it as the project evolves.

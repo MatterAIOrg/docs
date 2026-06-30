@@ -17,6 +17,14 @@ OrbCode connects to external tools via the **Model Context Protocol** (MCP). MCP
   </Card>
 </CardGroup>
 
+<Note>
+  MCP server configs live in `settings.json` and `.mcp.json`. The repo-level
+  **`.orb/`** folder holds project memory (`.orb/AGENTS.md`) and linked-repo
+  metadata (`.orb/links.json`) — see [Configuration → Linked
+  repositories](/orbcode-cli/configuration#linked-repositories) and
+  [Usage → `/link`](/orbcode-cli/usage#link-linked-repositories).
+</Note>
+
 ## Configuration scopes
 
 MCP servers are configured in three scopes (highest precedence last):

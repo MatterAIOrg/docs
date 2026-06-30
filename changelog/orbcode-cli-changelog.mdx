@@ -1,0 +1,104 @@
+---
+title: "OrbCode CLI Changelog"
+description: "Latest updates and improvements for the OrbCode CLI"
+---
+
+<Update label="June 30, 2026">
+## v0.3.3
+
+### Added
+
+- **Linked repositories (`/link`).** A new `/link` slash command opens an interactive manager where you point this repo at other repos on your machine (enter a folder path — absolute, `~/path`, or relative to the project). Links are persisted per-project in `.orb/links.json` and injected into the agent's environment details — including each linked repo's `AGENTS.md`, pulled in ahead of time — so a change here is checked for impact on, or propagated to, the linked repos. `.orb/links.json` is shared with the Orbital IDE extension (links written there are honored here, and vice versa), and a linked repo's `AGENTS.md` is read from `.orb/`, `.orbital/`, or `.orbcode/`.
+
+### Changed
+
+- **`/init` now writes to `.orb/AGENTS.md` and targets cold-start.** The generated `AGENTS.md` is written to the repo-level `.orb/` directory and now captures project structure, architecture, business-logic mapping, and code patterns/conventions — the context an agent needs to start coding without re-exploring. The cap is now ~150 lines (up from ~60) so it can cover all four sections without being truncated.
+- **Repo-level agent data lives in `.orb/`.** The folder OrbCode creates in a project for `AGENTS.md` (and now `links.json`) is `.orb/` — a single, tool-neutral name shared by the IDE and the CLI. Machine settings are unchanged (`~/.orbcode` and `<repo>/.orbcode/settings.json` stay put); the legacy `.orbcode/AGENTS.md` location is still read for backward compatibility.
+</Update>
+
+<Update label="June 24, 2026">
+## v0.3.2
+
+### Fixed
+
+- **MatterAI inference routed to the wrong backend.** `AxonClient` was building the OpenAI `baseURL` by running `API_GATEWAY_PATH` (`https://api2.matterai.so/v1/web/`) through `getUrlFromToken`, which rehosts *any* `api.matterai.so` target onto the control-plane host resolved from the JWT — so every inference request silently hit `https://api.matterai.so/v1/web/` instead of the gateway at `https://api2.matterai.so/v1/web/`. The gateway URL is now used directly, with the per-model `baseUrl` override still winning for local dev. Profile, task title, balance, and web search/fetch still go through the rehost helper (they intentionally target the control plane).
+</Update>
+
+<Update label="June 23, 2026">
+## v0.3.1
+
+### Changed
+
+- **Release workflow run title now shows the version.** The `Release` GitHub Actions workflow gained a `run-name` (e.g. `Release v0.3.1`) so manual dispatches and tag pushes are easier to tell apart in the Actions list. No functional change to the publish flow.
+</Update>
+
+<Update label="June 23, 2026">
+## v0.3.0
+
+### Added
+
+- **MCP server migration from Claude Code / Claude Desktop.** A new `orbcode mcp migrate` subcommand (with `--all` and `--dry-run` flags) and a `/migrate` slash command in the TUI scan well-known paths for MCP server configs and copy them into `~/.orbcode/settings.json` (user scope). Sources detected:
+  - `~/.claude/settings.json` (Claude Code, user scope)
+  - `~/.claude.json` → root `mcpServers` (Claude Code, user scope — the most common location, written by `claude mcp add -s user …`)
+  - `~/.claude.json` → `projects.<cwd>.mcpServers` (Claude Code, this project)
+  - `claude_desktop_config.json` (Claude Desktop — platform-specific path)
+
+  When the same server name appears in both layers of `~/.claude.json`, the root entry is shown and the project-layer duplicate is hidden (Claude's own per-project override precedence). The TUI shows a combined checklist across all sources; the CLI prints a preview by default and only writes with `--all`. Servers whose name already exists in the destination are silently skipped and counted in the summary. Codex support (TOML) is intentionally deferred.
+
+- **Delete action in the `/mcp` picker.** The interactive server manager gained a "Delete" action (last in the list, red) that permanently removes a server from its config file (whichever scope it lives in) and shows a y/n confirmation before doing it. Unlike Disable, Delete is irreversible — the config entry is gone, and you'll need to re-add the server with `orbcode mcp add` to get it back.
+
+- **Styled OAuth callback page.** The local browser page that receives the OAuth redirect now matches the matterai.so look (dark `#0d1117` background, centered card, green/red circular icon, brand footer) for success, error, and not-found paths, replacing the previous plain `<h1>` strings.
+</Update>
+
+<Update label="June 22, 2026">
+## v0.2.4
+
+### Added
+
+- **`-s` / `--system-prompt` flag to override the default system prompt.** Lets power users and CI pipelines inject a custom system prompt for a single run without editing their `settings.json`. The flag accepts a string, so quoted inline prompts and heredoc-style values both work.
+</Update>
+
+<Update label="June 22, 2026">
+## v0.2.3
+
+### Changed
+
+- **`/cost` renamed to `/usage`.** The slash command and any references in the UI now use the clearer "usage" label, matching the API field returned by the backend. `/cost` is no longer recognized.
+- **`orbcode mcp add --` separator.** The `--` flag is now consumed as the separator between the server name and the stdio command, matching Claude Code's `claude mcp add <name> -- <command>`. Fixes cases where a stdio server's own flags (e.g. `-y`) were mistaken for OrbCode flags.
+- **Local `AGENTS.md` ignored.** A repo-local `AGENTS.md` placed in the current working directory is no longer auto-loaded; only `~/.orbcode/AGENTS.md` (user) and the parent-directory walk (project) are read, matching the published skill/AGENTS.md docs.
+</Update>
+
+<Update label="June 20, 2026">
+## v0.2.0
+
+### Added
+
+- **MCP server support.** Connect external tools via the Model Context Protocol in three scopes (user, project `.mcp.json`, local). The interactive `/mcp` manager and `orbcode mcp add/remove/list` subcommand handle stdio, http, and sse transports. Project-scope servers require a one-time approval; OAuth 2.0 flows (RFC 9728 / 8414 / PKCE / dynamic client registration) are handled automatically, with tokens persisted under `~/.orbcode/mcp-auth/`.
+- **Skills system.** Reusable instruction sets the model loads on demand. Drop a `SKILL.md` under `~/.orbcode/skills/` (user) or `.orbcode/skills/` (project); the catalog is injected into the system prompt and `use_skill` loads the full body when a task matches a skill's `when_to_use` condition.
+- **AGENTS.md memory.** Project memory is discovered by walking the cwd and parent directories for `AGENTS.md` and `.orbcode/AGENTS.md` (closer-to-cwd wins), with `AGENTS.local.md` layered on top for private per-machine notes. User-level `~/.orbcode/AGENTS.md` is always loaded. `@include` directives let a memory file pull in shared snippets.
+- **Clipboard utility.** A single `clipboard` helper consolidates platform-specific copy logic so the rest of the codebase stays portable.
+</Update>
+
+<Update label="June 19, 2026">
+## v0.1.14
+
+### Changed
+
+- **Env var rename: `ORBCODE_*` → `MATTERAI_*`.** All `ORBCODE_*` environment variables have been renamed to `MATTERAI_*` (e.g. `ORBCODE_CONFIG_DIR` → `MATTERAI_CONFIG_DIR`). Old names are no longer recognized. This unifies the CLI's environment surface with the rest of the MatterAI tooling.
+</Update>
+
+<Update label="June 18, 2026">
+## v0.1.8
+
+### Fixed
+
+- **Status bar layout cleanups.** Fixed overlapping labels and inconsistent padding in the TUI status bar.
+</Update>
+
+<Update label="June 17, 2026">
+## v0.1.5
+
+### Added
+
+- **Initial public release.** OrbCode CLI ships with interactive TUI, headless `-p` mode, `--yolo` auto-approval, `--resume` for saved sessions, browser device-flow login, `~/.orbcode` config, and Axon model selection.
+</Update>

@@ -27,6 +27,8 @@ OrbCode CLI stores its state and configuration under `~/.orbcode/`. Two files li
 | `~/.orbcode/config.json` | the app | `0600` | login token, model, approval defaults |
 | `~/.orbcode/settings.json` | you (user) | `0644` | user-level config; merged in |
 | `<project>/.orbcode/settings.json` | you (project) | `0644` | project-level config, layered on top |
+| `<project>/.orb/AGENTS.md` | you or `/init` | `0644` | repo-level project memory, shared with the Orbital IDE extension |
+| `<project>/.orb/links.json` | you or `/link` | `0644` | linked repositories (see [Linked repositories](#linked-repositories)) |
 | `~/.orbcode/sessions/<id>.json` | the app | `0600` | saved sessions for `/resume` and `--resume` |
 | `~/.orbcode/hook-trust.json` | the app | `0600` | your trust decisions for project hooks |
 | `~/.orbcode/snapshots/…` | hooks | `0644` | optional: pre-compact transcript snapshots |
@@ -156,9 +158,30 @@ The full reference — configuration scopes, server types (stdio/http/sse), the 
 ## Skills & AGENTS.md memory
 
 - **Skills** — reusable instruction sets the model loads on demand. Place a `SKILL.md` under `~/.orbcode/skills/` (user) or `.orbcode/skills/` (project); the catalog is injected into the system prompt and `use_skill` loads the full body when a task matches.
-- **AGENTS.md memory** — project- and user-level instructions (build commands, code style, conventions) injected into every system prompt. OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename. Use `/init` to generate a starter file.
+- **AGENTS.md memory** — project- and user-level instructions (build commands, code style, conventions) injected into every system prompt. OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename. The repo-level file lives at **`.orb/AGENTS.md`** — the same folder the [Orbital IDE extension](/changelog/orbital-changelog) reads — so a single source of truth covers your terminal and your editor. Use `/init` to generate or refine a starter file.
 
 The full reference — creating skills, the `SKILL.md` format, how skills are used, AGENTS.md discovery order, and `@include` directives — is on the [Skills & memory page](/orbcode-cli/skills).
+
+## Linked repositories
+
+The repo-level **`.orb/`** folder is shared with the Orbital IDE extension. It holds the two project-level files OrbCode reads ahead of every session:
+
+- **`.orb/AGENTS.md`** — the project's cold-start memory (see [Skills & memory](#skills--agentsmd-memory)). Use `/init` to generate or refine it.
+- **`.orb/links.json`** — linked repositories: other repos whose `AGENTS.md` should be considered when working in this one. Use the `/link` slash command (or the IDE's `/link`) to add or remove entries.
+
+`links.json` schema:
+
+```json
+{
+  "links": [
+    { "path": "/Users/me/projects/shared-lib" },
+    { "path": "~/projects/design-system" },
+    { "path": "../api-server" }
+  ]
+}
+```
+
+Resolution and validation of each path happens at read time, so links written by the CLI or the IDE stay portable. At session start, OrbCode walks the links, reads each linked repo's `AGENTS.md` (from `.orb/`, `.orbital/`, or `.orbcode/`), and pulls them in **ahead of time** into the agent's environment details — so a change here is checked for impact on, or propagated to, the linked repos.
 
 ## Sessions
 

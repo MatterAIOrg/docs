@@ -19,7 +19,9 @@ OrbCode CLI is a standalone terminal coding agent powered by **Axon models by Ma
 - **Same Axon models as Orbital** — `axon-eido-3-code-pro`, `axon-eido-3-code-mini`, `axon-code-2-5-pro`, and `axon-code-2-5-mini`, with native JSON tool calls and image input.
 - **Multi-provider** — route to Anthropic Claude models or any OpenAI-compatible endpoint via the Vercel AI SDK, reusing the same agent loop, tools, and approvals.
 - **MCP servers** — connect external tools through the Model Context Protocol; servers appear as `mcp__<server>__<tool>` and can be called by the model.
-- **Skills & AGENTS.md memory** — load reusable instruction sets on demand, and inject project/user instructions into every system prompt.
+- **Skills & AGENTS.md memory** — load reusable instruction sets on demand, and inject project/user instructions into every system prompt. The repo-level file lives at **`.orb/AGENTS.md`**, the same folder the Orbital IDE reads.
+- **Linked repositories (`/link`)** — point this repo at other repos on your machine so a change here is checked for impact on (or propagated to) them. Links live in the shared **`.orb/links.json`**.
+- **`/init`** — analyze the codebase and write a concise `.orb/AGENTS.md` for cold-start, ~150 lines covering project structure, architecture, business-logic mapping, and code patterns/conventions.
 - **Streaming TUI** — markdown rendering, live reasoning under a collapsible "Thinking" block, and per-tool activity rows with diffs.
 - **Approvals & safety** — read-only tools run freely; file edits and commands prompt first, and dangerous commands can never be auto-approved.
 - **Headless mode** — pipe a single prompt with `-p` for scripts and CI.
@@ -123,7 +125,15 @@ Prints **only the final content** to stdout. Without `--yolo`, edit/command appr
 
 - **MCP servers** — OrbCode connects to external tools via the Model Context Protocol. Servers are configured in three scopes (user, project `.mcp.json`, local) and their tools appear alongside the native tools as `mcp__<server>__<tool>`. Manage them with the `orbcode mcp` subcommand or the `/mcp` slash command. See the [MCP servers page](/orbcode-cli/mcp).
 - **Skills** — reusable instruction sets the model loads on demand. Place a `SKILL.md` under `~/.orbcode/skills/` (user) or `.orbcode/skills/` (project); the catalog is injected into the system prompt and `use_skill` loads the full body when a task matches. See the [Skills & memory page](/orbcode-cli/skills).
-- **AGENTS.md memory** — project- and user-level instructions (build commands, code style, conventions) injected into every system prompt. OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename. Use `/init` to generate a starter file.
+- **AGENTS.md memory** — project- and user-level instructions (build commands, code style, conventions) injected into every system prompt. OrbCode's equivalent of Claude Code's `CLAUDE.md`, using the open `AGENTS.md` filename. The repo-level file lives at **`.orb/AGENTS.md`** — the same folder the Orbital IDE reads, so a single source of truth covers terminal and editor. Use `/init` to generate or refine a starter file.
+- **Linked repositories (`/link`)** — link other repos on your machine by folder path (absolute, `~/path`, or relative to the project). Links are persisted in **`.orb/links.json`** (also read by the IDE), and each linked repo's `AGENTS.md` is pulled in ahead of time so the model can see and act on it.
+
+<Note>
+  The folder OrbCode creates in a project for `AGENTS.md` and `links.json` is
+  **`.orb/`** — a single, tool-neutral name shared with the Orbital IDE
+  extension. Machine settings (`~/.orbcode`, `<repo>/.orbcode/settings.json`)
+  are unchanged. See the [Configuration page](/orbcode-cli/configuration#linked-repositories).
+</Note>
 
 ## Architecture
 
