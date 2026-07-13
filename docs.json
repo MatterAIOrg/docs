@@ -58,25 +58,30 @@
             "pages": ["introduction", "quick-start"]
           },
           {
-            "group": "Orbital App",
-            "icon": "apple",
-            "pages": ["orbital/install", "orbital/overview", "orbital/pricing"]
-          },
-          {
-            "group": "OrbCode CLI",
-            "icon": "terminal",
+            "group": "AI Coding Agents",
+            "icon": "code",
             "pages": [
-              "orbcode-cli/overview",
-              "orbcode-cli/install",
-              "orbcode-cli/usage",
-              "orbcode-cli/configuration",
-              "orbcode-cli/mcp",
-              "orbcode-cli/skills",
-              "orbcode-cli/hooks"
+              {
+                "group": "OrbCode CLI",
+                "pages": [
+                  "orbcode-cli/overview",
+                  "orbcode-cli/install",
+                  "orbcode-cli/usage",
+                  "orbcode-cli/configuration",
+                  "orbcode-cli/mcp",
+                  "orbcode-cli/skills",
+                  "orbcode-cli/hooks"
+                ]
+              },
+              {
+                "group": "Orbital IDE",
+                "pages": ["orbital/install", "orbital/overview"]
+              },
+              "orbital/pricing"
             ]
           },
           {
-            "group": "LLM Models and Pricing",
+            "group": "Axon Models",
             "icon": "brain-circuit",
             "pages": [
               "axon-overview",
@@ -103,7 +108,7 @@
               "quickstart-ai-code-review-agent",
               "quickstart-ai-code-review-gitlab",
               "quickstart-ai-code-review-atlassian-bitbucket",
-              "quickstart-ai-code-review-mcp-server",
+              "quickstart-ai-code-review-azure-devops",
               "ai-code-reviews/pricing",
               {
                 "group": "Features",
@@ -308,7 +313,7 @@
       {
         "tab": "API Reference",
         "pages": [
-{
+          {
             "group": "Inference",
             "pages": [
               "api-reference/endpoint/responses",
