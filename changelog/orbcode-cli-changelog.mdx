@@ -3,6 +3,61 @@ title: "OrbCode CLI Changelog"
 description: "Latest updates and improvements for the OrbCode CLI"
 ---
 
+<Update label="July 13, 2026">
+## v0.4.2
+
+### Changed
+
+- **Default theme now uses a neutral base with consistent semantic accents.** The explicit palette uses `#ffffff` primary, `#d0d0d0` accent, `#a8a8a8` thinking, `#7a7a7a` dim, and `#1a1a1a` background, while errors and removals use `#E34671`, successes and additions use `#3FA266`, and approval warnings use `#E2CE76`. All `<Text dimColor>` usages were replaced with explicit `color={COLORS.dim}`. Code blocks follow `COLORS.accent`, and edit-tool diff backgrounds now use the shared error/success colors.
+- **TUI now runs in the alternate screen buffer as an independent surface.** On startup the app enters the alternate screen and sets the terminal's default foreground/background via OSC 10/11 to the greyscale palette. The terminal scrollback is no longer affected; on exit the original screen and colors are restored.
+- **All content has horizontal margin.** The root container carries `marginX={2}` so the header, conversation rows, pickers, prompts, input box, and status bar all sit inset from the terminal edge consistently.
+- **Input box is now a fully-bordered rounded box with quieter chrome.** It draws all four sides with `borderStyle="round"`, using a 50%-brightness border so the input remains visually anchored without dominating the chat.
+- **The initial OrbCode header is top-anchored with a stable margin.** The borderless intro uses a half-size cyan/white ASCII interpretation of the `orbital.svg` brand mark alongside a metadata column, followed by a compact two-column command grid and shortcut row.
+- **User messages render as full-width borderless highlighted blocks.** A subtle neutral background spans the transcript width with two-cell horizontal and one-row vertical padding.
+- **Command and file-completion popups use padded rounded surfaces.** Slash commands and `@file` results now share a solid neutral background with same-color half-cell corner caps and padded content, without a contrasting border.
+- **Approval modes have semantic highlighting again.** Ask mode is white, edit approval is yellow, and auto-approval is green.
+
+### Fixed
+
+- **Diff add/remove lines now render with explicit foreground color.** Previously the text was invisible on some terminals against dark green/red backgrounds.
+- **Spinner no longer causes the input box to flicker.** The viewport budget now correctly accounts for the spinner's full height.
+- **Fullscreen TUI no longer leaves duplicate frames in the scrollback.** Full frames use retained, cursor-addressed row replacements inside a synchronized terminal update. Neither linefeeds nor per-frame display clears are emitted.
+- **Scrolling is smoother and fixed controls no longer flicker.** Wheel input is coalesced, completed transcript rows are memoized, and the terminal adapter keeps a retained row cache.
+- **The thinking animation remains visible during reasoning streams.** The spinner stays mounted above the live preview until reasoning completes.
+- **Ctrl+D now requires confirmation.** The first press shows a three-second warning; only a second press exits.
+- **Live AI output is no longer clipped in resumed or narrow-terminal chats.** Transcript virtualization accounts for every committed row's margins and borders.
+- **Diff background colors are now 50% transparent.** Added/removed line backgrounds in the diff view are alpha-blended against the terminal background (`#1a1a1a`), producing a muted green (`#2C5E40`) and muted red (`#7E3045`).
+- **Resumed sessions now restore reasoning and tool history.** New sessions persist the exact visible transcript, including thinking durations, tool summaries, result previews, errors, and diffs. Older sessions reconstruct tool calls, results, and edit fragments from stored model messages when possible.
+- **@-file autocomplete now shows files created during the session.** The file list was computed once on mount; changed to re-scan the workspace each time the `@` popup opens.
+</Update>
+
+<Update label="July 8, 2026">
+## v0.4.1
+
+### Fixed
+
+- **Input box now stays pinned to the bottom of the terminal.** Removed `<Static>` which permanently wrote rows to stdout and caused the whole view to scroll up when a long response completed. Rows are now rendered in the dynamic region with viewport-capped visibility.
+</Update>
+
+<Update label="July 5, 2026">
+## v0.4.0
+
+### Added
+
+- **`/task` slash command to reference a previous task.** Opens a session picker over previous sessions in the same directory. On selection, the prior conversation is wrapped in `<previous_task>` tags and the model is prompted to summarize it as reference.
+- **`axon-eido-3-flash`** replaces `axon-code-2-5-mini` as the free model in the built-in registry. Offers 200K context, fast responses, and zero cost.
+
+### Changed
+
+- **System prompt rewritten for speed and editing discipline.** The `always gather exhaustive context` guidance is replaced with a `gather enough context, then act` principle. New editing discipline block instructs the model to copy `old_string` verbatim and never guess at corrected values.
+
+### Fixed
+
+- **Transient model stream failures are now automatically retried.** Connection drops before the first chunk are retried up to 3 times with exponential backoff capped at 8s.
+- **Reasoning phase timing now reflects only the thinking time.** Reasoning is modeled as open/close segments, matching the on-screen `Thinking` block behavior.
+- **Mid-stream retry allowed when partial output can be rolled back.** The agent can re-issue the request if it can cleanly undo the partial output.
+</Update>
+
 <Update label="June 30, 2026">
 ## v0.3.3
 
