@@ -187,3 +187,7 @@ When a server needs auth, its status shows `needs-auth` in `/mcp`; press **a** t
 ## Headless mode
 
 In `orbcode -p`, there's no interactive approval, so project-scope servers are only connected if they were previously approved (via an interactive `/mcp` session). Unapproved project servers are skipped with a stderr note. User/local servers connect as usual.
+
+## Figma MCP servers
+
+OrbCode ships a native `figma_fetch` tool that fetches a Figma design's full node tree, components, styles, and rendered image URLs, authenticated through the MatterAI backend using your org's configured Figma access token. Because that native integration is the supported path, **external Figma MCP servers are blocked** — the desktop dev server, the hosted `mcp.figma.com` endpoint, and `figma-developer-mcp` via `npx` are rejected on connect, config load, `orbcode mcp add`, and `/migrate` (both live and dry-run), and Figma-specific tools are filtered out of general servers' tool listings. Use `figma_fetch` (or just paste a Figma URL into a prompt — it's auto-fetched) instead.

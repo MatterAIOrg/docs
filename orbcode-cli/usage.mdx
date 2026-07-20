@@ -71,6 +71,9 @@ Slash commands are entered at the input prompt (start with `/`). Most have alias
 | `/link` | manage linked repositories (other repos checked for impact on this one) |
 | `/migrate` | import MCP server configs from Claude Code / Claude Desktop |
 | `/mcp` | manage MCP servers — enable, disable, reconnect, view status & tool counts |
+| `/plugins` | browse the plugin marketplace and manage installed plugins (alias: `/plugin`, `/skills`) |
+| `/create-skill` | create a repo-local skill under `.orb/skills/` from a plain-language description |
+| `/weekly-reset` | reset your weekly usage tier (Pro+, once per monthly billing cycle) |
 | `/commit` | check pending changes and create detailed commits |
 | `/code-review` | expert review of pending changes: performance, security, bugs, tests |
 | `/login` | start the browser sign-in flow |
@@ -145,6 +148,8 @@ orbcode -p "fix the lint errors" --yolo
 - **Tasks** — the model maintains a checklist via `update_todo_list`, rendered as a compact Tasks panel.
 - **@-references** — type `@` in the input to fuzzy-search workspace files.
 - **Status bar** — approval mode, busy state, model name, context token usage, and session cost.
+- **Spinner tips** — after an operation runs for 2s, a random slash-command tip appears under the `Thinking` / `Working` spinner.
+- **Figma auto-fetch** — paste a `figma.com` URL into a prompt and the agent pre-fetches the design's node tree, components, styles, and rendered images before the first completion, so it has visual + structural context from step 0.
 - **Completion card** — `attempt_completion` renders a bordered "✔ Task completed" card with the result.
 
 ## MCP servers
@@ -215,7 +220,8 @@ Active in the CLI (schemas byte-identical to the extension's native tools):
 | `execute_command` | user's shell, 120s timeout, 30k output cap, optional cwd |
 | `web_search` / `web_fetch` | proxied through the MatterAI backend with your token |
 | `update_todo_list` | drives the TUI todo panel |
-| `use_skill` | loads a skill's full instructions from `~/.orbcode/skills` or `.orbcode/skills` |
+| `use_skill` | loads a skill's full instructions by name or by an explicit skill directory / `SKILL.md` path |
+| `figma_fetch` | fetches a Figma design's node tree, components, styles, and rendered image URLs (authenticated through the MatterAI backend) |
 | `ask_followup_question` | interactive menu in the TUI |
 | `attempt_completion` | ends the turn with a completion card |
 | `mcp__<server>__<tool>` | any tool exposed by a connected MCP server (see [MCP servers](#mcp-servers)) |

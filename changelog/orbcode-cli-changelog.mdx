@@ -3,6 +3,104 @@ title: "OrbCode CLI Changelog"
 description: "Latest updates and improvements for the OrbCode CLI"
 ---
 
+<Update label="July 20, 2026">
+## v0.5.5
+
+### Added
+
+- **`/create-skill` slash command.** Describe a repository-specific workflow in plain language and OrbCode creates or updates a reusable skill under `.orb/skills/<skill-name>/`, keeping any supporting scripts, references, and assets inside the same skill directory.
+- **Figma design context (`figma_fetch` tool).** A new native tool fetches the full node tree, components, styles, and rendered image URLs for any `figma.com/design/`, `/file/`, or `/proto/` URL. Requests are authenticated against the MatterAI backend (`/axoncode/figma`), which uses the org's configured Figma access token so callers don't need to handle credentials.
+- **Auto-fetch Figma URLs from user messages.** When a user pastes a Figma link into a prompt, the agent scans the message for Figma URLs and pre-fetches each one before the first model completion. The design data is injected as a tool result, so the model has visual + structural context from step 0 without having to discover and call `figma_fetch` itself. URLs are deduped and trailing punctuation is stripped.
+- **Load skills from explicit paths.** `use_skill` now accepts an absolute, workspace-relative, or `~/` path to a skill directory or `SKILL.md` file in addition to discovered names. Prompts and `AGENTS.md` files can reference shared skills stored outside the user/project/plugin catalogs.
+- **`/weekly-reset` slash command.** Eligible paid users (Pro and above) can reset their weekly usage tier once per monthly billing cycle. Calls `/axoncode/weekly-reset`, refreshes tiered usage, and reports the next available time.
+
+### Changed
+
+- **External Figma MCP servers are blocked.** The native `figma_fetch` tool authenticates against the Figma API and returns the full node tree, components, styles, and image URLs. External Figma MCP servers (the desktop dev server, the hosted `mcp.figma.com` endpoint, and `figma-developer-mcp` via npx) bypass that integration and can conflict with it, so they are now rejected on connect, config load, config addition, and migration (both live and dry-run). Figma-specific tools are also filtered out of general servers' tool listings.
+
+### Fixed
+
+- **Streaming responses stay visible above the input box.** The transcript's live edge is now anchored using its rendered layout instead of relying on approximate text-height calculations, so word-wrapped final lines are not clipped behind the composer.
+</Update>
+
+<Update label="July 20, 2026">
+## v0.5.4
+
+### Added
+
+- **Helpful slash-command tips under the spinner.** After an operation has been running for 2 seconds, a random tip (e.g. "Use `/help` to see every available slash command.") appears beneath the loading spinner. Shown for the `Thinking` and `Working` states.
+</Update>
+
+<Update label="July 18, 2026">
+## v0.5.3
+
+### Added
+
+- **Auto-fetch Figma URLs from user messages.** When a user pastes a Figma link into a prompt, the agent scans the message for Figma URLs and pre-fetches each one before the first model completion, injecting the design data as a tool result so the model has visual + structural context from step 0.
+- **`figma_fetch` native tool.** Fetches the full node tree, components, styles, and rendered image URLs for any Figma design URL, authenticated through the MatterAI backend.
+
+### Fixed
+
+- **Transcript live edge anchoring.** Anchor streaming transcript to the bottom so the live edge stays visible above the input box.
+</Update>
+
+<Update label="July 16, 2026">
+## v0.5.1
+
+### Fixed
+
+- **Allow empty MCP settings objects in project config.** Project `.mcp.json` files with an empty or missing `mcpServers` object no longer error.
+</Update>
+
+<Update label="July 16, 2026">
+## v0.5.0
+
+### Added
+
+- **Accepted code metrics reporting.** Successful `file_edit`, `file_write`, and `multi_file_edit` calls now POST line counters (added/deleted, language) to `/axoncode/meta/<taskId>/lines`, matching the extension's behavior. Works for both user-approved and auto-approved edits; reporting is best-effort and never blocks the session.
+</Update>
+
+<Update label="July 15, 2026">
+## v0.4.8
+
+### Added
+
+- **Plugin marketplace browser (`/plugins`).** A new tabbed UI lists installed plugins and browses the complete Anthropic `claude-plugins-official` marketplace. Installation downloads the pinned plugin source as one bundle into `.orb/plugins/<name>/`, preserving skills, commands, agents, MCP config, hooks, scripts, rules, and other supporting files. Search filters by name, description, or author. `/plugin` and the former `/skills` command remain as aliases.
+- **Non-interactive plugin management.** `orbcode plugin install clickhouse@claude-plugins-official`, `orbcode plugin list`, and `orbcode plugin uninstall <name>` provide the same install flow outside the TUI.
+
+### Fixed
+
+- **Marketplace installation no longer depends on GitHub tree scans.** The previous per-repository `SKILL.md` scan quickly exhausted GitHub's anonymous API limit and incorrectly reported that plugins such as ClickHouse had no skills. OrbCode now installs `git-subdir`, `url`, `github`, and official relative-path sources through git at the marketplace-pinned revision.
+- **Plugin components are loaded from the installed bundle.** Skills and legacy commands are exposed as `<plugin>:<skill>`, bundled reference files remain available, and `.mcp.json`/manifest MCP servers are namespaced and discovered as project-scoped servers with `${CLAUDE_PLUGIN_ROOT}` substitution.
+- **Standalone project skills use `.orb/skills/`.** The skill loader discovers that directory alongside the legacy `.orbcode/skills/` location.
+
+### Changed
+
+- **All popovers are now centered on screen.** Pickers, prompts, and managers (model picker, session picker, link manager, plugin manager, MCP picker, approval prompts, follow-up prompts, hook trust, MCP approval, migration picker) render as an absolutely-positioned overlay centered vertically and horizontally instead of flowing inline with the transcript.
+- **The TUI now preserves the terminal's configured colors.** Startup and cleanup no longer emit OSC 10/11 or OSC 110/111 sequences that override or reset the terminal's default foreground and background colors.
+- **The built-in UI palette follows both light and dark terminal themes.** Neutral text inherits the terminal foreground, semantic accents use the terminal's named ANSI palette, and prompts and popups no longer apply hardcoded background colors. Diff rows retain their original 5% alpha-blended backgrounds, with OrbCode green (`#3FA266`) and red (`#E34671`) used consistently across themes.
+- **The OrbCode company logo is isolated from terminal theming.** Its outer cyan (`#06E1E7`), inner cyan (`#8BF4F7`), and white core (`#ffffff`) remain identical in every terminal theme.
+</Update>
+
+<Update label="July 13, 2026">
+## v0.4.3
+
+### Changed
+
+- **Diff background colors are now 50% transparent.** Added/removed line backgrounds in the diff view are alpha-blended against the terminal background (`#1a1a1a`), producing a muted green (`#2C5E40`) and muted red (`#7E3045`) that are less visually aggressive while preserving the red/green semantic.
+- **Viewport layout adapts to the real input box height.** The input box now reports its rendered height to the parent viewport (including multiline prompt wrapping, slash-command popups, and file-completion popups), so the bottom controls stack never overlaps the live response. The previous hardcoded 4-row estimation caused overflow on multiline input or when autocomplete was open.
+- **Streaming output is truncated to the viewport tail.** Instead of accumulating the entire streaming response in the live area (which pushed the input box off-screen in long generations), only lines fitting the available height are rendered. The complete response is committed to the transcript on completion.
+- **Diff line-height estimates in the virtualized transcript now account for the number/type gutter.** The diff gutter occupies ~8 columns, so each content line wraps at a narrower width. Hunk headers are structural and skipped. This prevents underestimation that could overflow the viewport.
+- **Task list height measurement uses proper word-wrap calculations.** Task items are now wrapped at the available terminal width instead of counting raw lines, so long task descriptions don't push controls off-screen.
+- **Reasoning row height estimates account for the gutter.** Collapsed reasoning rows are measured at `width - 2` to match the actual render, preventing underestimation that clips the fold header.
+- **Result preview and completion text use correct line widths.** Both are now wrapped at `width - 2` and `width - 4` respectively, matching the indentation they render at.
+
+### Fixed
+
+- **Resumed sessions now restore reasoning and tool history.** New sessions persist the exact visible transcript, including thinking durations, tool summaries, result previews, errors, and diffs. Older sessions reconstruct tool calls, results, and edit fragments from their stored model messages when possible.
+- **`@`-file autocomplete now shows files created during the session.** The file list was computed once on mount; changed to re-scan the workspace each time the `@` popup opens.
+</Update>
+
 <Update label="July 13, 2026">
 ## v0.4.2
 

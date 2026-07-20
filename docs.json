@@ -70,7 +70,8 @@
                   "orbcode-cli/configuration",
                   "orbcode-cli/mcp",
                   "orbcode-cli/skills",
-                  "orbcode-cli/hooks"
+                  "orbcode-cli/hooks",
+                  "orbcode-cli/plugins"
                 ]
               },
               {
@@ -305,6 +306,10 @@
               {
                 "group": "Ticketing",
                 "pages": ["connectors/jira"]
+              },
+              {
+                "group": "Design",
+                "pages": ["connectors/figma"]
               }
             ]
           }
@@ -349,11 +354,6 @@
           "anchor": "Blog",
           "href": "https://matterai.so/blog",
           "icon": "newspaper"
-        },
-        {
-          "anchor": "Discord",
-          "href": "https://discord.gg/fJU5DvanU3",
-          "icon": "discord"
         },
         {
           "anchor": "Reddit",

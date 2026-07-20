@@ -1,0 +1,63 @@
+---
+title: "Plugins"
+description: "Extend OrbCode with plugins for additional skills, commands, agents, and MCP servers."
+---
+
+# Plugins
+
+OrbCode supports a plugin system that allows you to extend its capabilities with additional skills, commands, agents, and MCP servers. Plugins are installed on a per-project basis and are stored in the `.orb/plugins/` directory.
+
+## Managing Plugins
+
+You can manage plugins using the `orbcode plugin` command.
+
+### Install a Plugin
+
+To install a plugin from the official marketplace, use the `install` command:
+
+```bash
+orbcode plugin install <name>@claude-plugins-official
+```
+
+**Example:**
+
+```bash
+orbcode plugin install clickhouse@claude-plugins-official
+```
+
+This will download and install the plugin into your project's `.orb/plugins/` directory. After installing a new plugin, you should restart OrbCode to load all the new components.
+
+### List Installed Plugins
+
+To see which plugins are currently installed in your project, use the `list` command:
+
+```bash
+orbcode plugin list
+```
+
+This will output a list of installed plugins along with the components they provide (e.g., skills, commands, agents, MCP servers).
+
+### Uninstall a Plugin
+
+To remove a plugin from your project, use the `uninstall` command:
+
+```bash
+orbcode plugin uninstall <name>
+```
+
+**Example:**
+
+```bash
+orbcode plugin uninstall clickhouse
+```
+
+This will remove the plugin and its components from your project.
+
+## Plugin Components
+
+Plugins can provide various components to enhance your OrbCode experience:
+
+- **Skills**: Custom skills that agents can use to perform specific tasks.
+- **Commands**: Additional CLI commands.
+- **Agents**: Specialized agents tailored for specific workflows.
+- **MCP Servers**: Model Context Protocol servers to provide additional context and capabilities.

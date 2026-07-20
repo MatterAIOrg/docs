@@ -23,7 +23,7 @@ Skills are reusable instruction sets the model can load on demand. A skill is a 
 
 ### Creating a skill
 
-Place a directory under `~/.orbcode/skills/` (user, applies everywhere) or `.orbcode/skills/` (project, checked into the repo):
+Place a directory under `~/.orbcode/skills/` (user, applies everywhere) or `.orb/skills/` (project, checked into the repo; the legacy `.orbcode/skills/` location is still read for backward compatibility):
 
 ```
 ~/.orbcode/skills/
@@ -53,6 +53,12 @@ When writing Go in this project:
 ### How skills are used
 
 The skill catalog (names + descriptions + when-to-use) is injected into the system prompt. When a task matches a skill's `when_to_use` condition, the model calls the `use_skill` tool with the skill's name, which loads the full instructions into context. Project skills override user skills on name collisions (closer-to-cwd wins).
+
+`use_skill` also accepts an **explicit path** in addition to a discovered name. Pass an absolute, workspace-relative, or `~/` path to a skill directory or `SKILL.md` file to load a shared skill that lives outside the user/project/plugin catalogs — useful from prompts or `AGENTS.md` `@include` references.
+
+### `/create-skill` — generate a skill from a description
+
+`/create-skill <describe the skill you want>` turns a plain-language request into a repository-local skill under `.orb/skills/<skill-name>/`, keeping any supporting scripts, references, and assets inside the same skill directory. The agent is constrained to that path and cannot touch files outside it. Re-run it to refine an existing skill.
 
 ## AGENTS.md memory
 
