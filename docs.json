@@ -78,7 +78,8 @@
                 "group": "Orbital IDE",
                 "pages": ["orbital/install", "orbital/overview"]
               },
-              "orbital/pricing"
+              "orbital/pricing",
+              "coding-agents/analytics"
             ]
           },
           {
