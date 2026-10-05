@@ -1,26 +1,31 @@
 ---
 title: Model Pricing
-og:title: "Axon AI Model Pricing | MatterAI Documentation"
-description: "Pricing for Axon AI models"
+og:title: "MatterAI Inference API Pricing | MatterAI Documentation"
+description: "Pricing for MatterAI inference API models"
 ---
 
 ## Pricing and Comparison
 
-| Model         | Input Price (per 1M tokens) | Output Price (per 1M tokens) | Context Window Size | Max Output Tokens |
-| ------------- | --------------------------- | ---------------------------- | ------------------- | ----------------- |
-| Axon 2.5 Pro  | $2.00                       | $8.00                        | 200K tokens         | 128K              |
-| Axon 2.5 Mini | $0.50                       | $2.00                        | 1M tokens           | 128K              |
+| Model                     | Input Price (per 1M tokens) | Output Price (per 1M tokens) | Context Window Size | Max Output Tokens |
+| ------------------------- | --------------------------- | ---------------------------- | ------------------- | ----------------- |
+| GLM 5.3 Flash             | $0.15                       | $0.50                        | 1M tokens           | 64K               |
+| DeepSeek V4 Flash         | $0.14                       | $0.28                        | 1M tokens           | 64K               |
+| Muse Spark 1.3 Contributor| $0.10                       | $0.20                        | 1M tokens           | 64K               |
+| Gemma 4                   | Free                        | Free                         | 256K tokens         | 64K               |
 
 ## Prompt Caching
 
 Cached input tokens are automatically discounted at 50% off the standard input price. Caching kicks in automatically for repeated prompt prefixes.
 
-| Model         | Cached Input Price (per 1M tokens) |
-| ------------- | ---------------------------------- |
-| Axon 2.5 Pro  | $1.00                              |
-| Axon 2.5 Mini | $0.25                              |
+| Model                     | Cached Input Price (per 1M tokens) |
+| ------------------------- | ---------------------------------- |
+| GLM 5.3 Flash             | $0.075                             |
+| DeepSeek V4 Flash         | $0.07                              |
+| Muse Spark 1.3 Contributor| $0.05                              |
+| Gemma 4                   | Free                               |
 
 <Note>
   All models support tool calling, structured outputs, web search, and text +
-  image input with text output.
+  image input with text output. A 30% automatic discount is applied to all
+  models.
 </Note>

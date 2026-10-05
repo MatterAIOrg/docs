@@ -1,104 +1,38 @@
 ---
-title: "Models Overview"
-description: "Overview of Axon AI Models - secure, production-ready AI models for general-purpose tasks, coding and deep-research."
-og:title: "Axon Models By MatterAI | MatterAI Documentation"
-og:description: "Overview of Axon AI Models By MatterAI - secure, production-ready AI models for general-purpose tasks, coding and deep-research."
-og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1759829903/axon-models_n4c8t6.webp"
-og:url: "https://docs.matterai.so/axon-models"
+title: "Inference API Overview"
+description: "Ultra-fast inference for open-source and third-party models including GLM 5.3, DeepSeek V4, Muse Spark 1.3, and Gemma 4 with up to 1M context windows."
+og:title: "MatterAI Inference API | MatterAI Documentation"
+og:description: "Ultra-fast inference for open-source and third-party models with up to 1M context windows, native tool calling, and 30% automatic discount."
+og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1766239090/183_1_j23rxf.webp"
+og:url: "https://docs.matterai.so/inference"
 ---
 
-<Frame>
-  <img
-    src="https://res.cloudinary.com/dxvbskvxm/image/upload/v1759829903/axon-models_n4c8t6.webp"
-    className="block"
-  />
-</Frame>
+MatterAI provides ultra-fast inference for open-source and third-party models through a single, unified API. Access GLM 5.3, DeepSeek V4, Muse Spark 1.3, Gemma 4, and more — all with up to 1M context windows, native tool calling, and a 30% automatic discount.
 
-**Axon offers secure, production-ready AI models for both code generation and general-purpose tasks, leveraging State-of-the-Art Deep Reasoning powered by Interleaved Reasoning [https://arxiv.org/abs/2505.19640](https://arxiv.org/abs/2505.19640) and State Machines**
+## Available Models
 
-## Benchmarks
-
-<Frame>
-  <img src="/images/axon/axon-benchmarks.png" className="block" />
-</Frame>
-
-## Architecture
-
-<Note>
-  Axon Models are based on open source models from Kimi and Deepseek, fine tuned
-  on our proprietary dataset and upgraded with deep reasoning and state machine
-  capabilities.
-</Note>
-
-### Mixture of Experts (MoE) architecture
-
-MoE is a technique that allows the model to dynamically select the expert model to use for a given input.
-
-This architecture enables engineering teams to build more scalable and efficient systems by routing tasks to specialized experts, reducing computational overhead while maintaining high performance across diverse workloads.
-
-## What makes Axon different?
-
-- **Deep Reasoning**: Our SOTA Deep Reasoner generates a detailed reasoning process for your requests, detects what needs to be done and how to do it, ensuring all the context is considered and the best possible solution is provided.
-- **State Machines**: Our SOTA State Machine uses temporal memories to remember your continued flow of usage on what has accomplished and what needs to be completed next.
-
-## Deep Reasoner
-
-Our State-of-the-Art Deep Reasoner generates a detailed reasoning process for your requests, detects what needs to be done and how to do it, ensuring all the context is considered and the best possible solution is provided.
-
-- **Multi-sources causal graph traversal** for inferencing across heterogeneous data sources, enabling root-cause analysis and counterfactual reasoning.
-- **Dynamic symbolic grounding** via contextual ontologies to map abstract concepts into actionable knowledge representations in real time.
-- **Probabilistic logic synthesis** with uncertainty quantification to evaluate solution optimality under incomplete or ambiguous input conditions.
-- **Hierarchical attention over structured memory** to maintain long-range dependencies during complex, multi-step problem decomposition.
-- **Meta-cognitive feedback loops** that refine internal heuristics based on outcome validation, improving future reasoning trajectories.
-- **Real-time web search integration** with federated query optimization across multiple search providers for comprehensive knowledge retrieval.
-- **Adaptive web content parsing** using semantic-aware scrapers that extract structured data from dynamic web sources while respecting rate limits and ToS.
-
-<Frame>
-  <img src="/images/axon/axon-deep-reasoner.png" className="block" />
-</Frame>
-
-## State Machine
-
-Our State-of-the-Art State Machine Engine uses temporal memories to remember your continued flow of usage on what has accomplished and what needs to be completed next.
-
-- **Hierarchical semi-Markov decision processes** (HSMDPs) for modeling variable-duration states and adaptive task sequencing.
-- **Distributed state persistence with vector-clock reconciliation** to ensure consistency across asynchronous, concurrent user sessions.
-- **Reinforcement learning-driven transition policies** that optimize long-term user goal completion over immediate action rewards.
-- **Temporal difference learning over latent state embeddings** to predict and pre-fetch likely next states for zero-latency transitions.
-- **Context-sensitive state compression** using learned subroutines to reduce combinatorial state explosion while preserving semantic fidelity.
-
-<Frame>
-  <img src="/images/axon/axon-state-machine.png" className="block" />
-</Frame>
-
-## Model Family
-
-<CardGroup cols={3}>
-  <Card
-    img="https://res.cloudinary.com/dxvbskvxm/image/upload/v1759829902/axon_mphl2c.webp"
-    title="Axon 1"
-    icon="brain-circuit"
-    href="/axon"
-  >
-    General Purpose Model for high-effort day to day tasks
+<CardGroup cols={2}>
+  <Card title="GLM 5.3 Flash" icon="brain-circuit">
+    Fast, low-cost open model for everyday coding tasks. 1M context window.
   </Card>
-  <Card
-    img="https://res.cloudinary.com/dxvbskvxm/image/upload/v1760447490/axon-mini_jjac8i.webp"
-    title="Axon Mini 1"
-    icon="microchip"
-    href="/axon-mini"
-  >
-    General Purpose Model for low-effort day to day tasks
+  <Card title="DeepSeek V4 Flash" icon="microchip">
+    Fast, low-cost open model for low-effort day-to-day coding tasks. 1M context window.
   </Card>
-  <Card
-    img="https://res.cloudinary.com/dxvbskvxm/image/upload/v1759829903/axon-code_kfrxe2.webp"
-    title="Axon Code 1"
-    icon="laptop-code"
-    href="/axon-code"
-  >
-    Code Generation Model for high-effort coding tasks
+  <Card title="Muse Spark 1.3 Contributor" icon="bolt">
+    Meta's open general-purpose model for everyday coding tasks. 1M context window.
+  </Card>
+  <Card title="Gemma 4" icon="sparkles">
+    Google's lightweight, open multimodal model for reasoning, code generation, and tools. 256K context.
   </Card>
 </CardGroup>
+
+## Key Features
+
+- **1M Context Windows**: Process documents, codebases, and conversations of any length
+- **Native Tool Calling**: Built-in support for function calling and structured outputs
+- **30% Automatic Discount**: All models include an automatic 30% discount on token costs
+- **Prompt Caching**: Automatic caching of repeated prompt prefixes for up to 70% cost reduction
+- **Regional Data Residency**: Your data never leaves your chosen region
 
 ## Getting Started
 
@@ -120,7 +54,7 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer MATTER_API_KEY' \
   --data '{
-  "model": "{{MODEL_ID}}",
+  "model": "zai/glm-5.3-flash",
   "messages": [
     {
       "role": "system",
@@ -133,13 +67,6 @@ curl --request POST \
   ],
   "stream": false,
   "max_tokens": 1000,
-  "reasoning": {
-    "effort": "high",
-    "summary": "none"
-  },
-  "response_format": {
-    "type": "text"
-  },
   "temperature": 0,
   "top_p": 1
 }'
@@ -155,7 +82,7 @@ const openai = new OpenAI({
 
 async function main() {
   const response = await openai.chat.completions.create({
-    model: "{{MODEL_ID}}",
+    model: "zai/glm-5.3-flash",
     messages: [
       {
         role: "system",
@@ -168,13 +95,6 @@ async function main() {
     ],
     stream: false,
     max_tokens: 1000,
-    reasoning: {
-      effort: "high",
-      summary: "none",
-    },
-    response_format: {
-      type: "text",
-    },
     temperature: 0,
     top_p: 1,
   });
@@ -194,7 +114,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-  model='{{MODEL_ID}}',
+  model='zai/glm-5.3-flash',
   messages=[
     {
       'role': 'system',
@@ -207,13 +127,6 @@ response = client.chat.completions.create(
   ],
   stream=False,
   max_tokens=1000,
-  reasoning={
-    'effort': 'high',
-    'summary': 'none'
-  },
-  response_format={
-    'type': 'text'
-  },
   temperature=0,
   top_p=1
 )
@@ -226,6 +139,6 @@ print(response.choices[0].message.content)
 # Data Privacy
 
 <Note>
-  MatterAI never trains on your codebase, all data is temporary and deleted
-  automatically.
+  MatterAI never trains on your inputs. Your data is temporary, deleted
+  automatically, and never leaves your chosen region.
 </Note>

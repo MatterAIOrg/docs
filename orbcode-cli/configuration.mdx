@@ -65,7 +65,7 @@ All keys are optional.
 | --- | --- | --- | --- |
 | `apiKey` | string | — | token used instead of logging in. Takes precedence over `MATTERAI_TOKEN` only if `MATTERAI_TOKEN` is unset. |
 | `baseUrl` | string | MatterAI gateway | point the chat client at any OpenAI-compatible gateway. Honoured when the chosen model has no `provider` (or `provider: "matterai"`). |
-| `model` | string | `axon-eido-3-code-mini` | default model id. Overridden by `--model`/`-m` on the CLI. |
+| `model` | string | `axon-eido-3.2-code` | default model id. Overridden by `--model`/`-m` on the CLI. |
 | `autoApproveEdits` | boolean | `false` | session default for file-edit approvals (`y` vs. prompt). Dangerous commands still always prompt. |
 | `autoApproveSafeCommands` | boolean | `false` | session default for safe command approvals. Dangerous commands are never auto-approved. |
 | `customModels` | array | `[]` | extra models that appear in the `/model` picker alongside the built-in Axon models. See [Custom models](#custom-models). |

@@ -1,8 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "aspen",
-  "name": "MatterAI Documentation | AI Super Intelligence",
-  "description": "AI Super Intelligence for general purpose tasks, code generation and deep research",
+  "name": "MatterAI Documentation | Inference & AI Code Reviews",
+  "description": "Ultra-fast inference for open-source and third-party models, plus agentic AI code reviews for every pull request.",
   "colors": {
     "primary": "#1ebdc2",
     "light": "#c4fdff",
@@ -17,16 +17,16 @@
   "seo": {
     "metatags": {
       "og:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1779722501/og-image-matter-new_kpallr.png",
-      "og:title": "MatterAI - Frontier LLM Intelligence at 70% Less Cost",
-      "og:description": "Get frontier LLM intelligence matching GPT-5.5 and Claude Opus 4.8 at 70% lower token cost. Run agentic coding and research with Axon.",
+      "og:title": "MatterAI - Inference API & AI Code Reviews",
+      "og:description": "Ultra-fast inference for open-source and third-party models with up to 1M context windows, plus agentic AI code reviews.",
       "og:url": "https://docs.matterai.so",
       "og:site_name": "MatterAI",
       "og:type": "website",
       "og:locale": "en_US",
       "twitter:card": "summary_large_image",
       "twitter:site": "@matteraidev",
-      "twitter:title": "MatterAI - Frontier LLM Intelligence at 70% Less Cost",
-      "twitter:description": "Get frontier LLM intelligence matching GPT-5.5 and Claude Opus 4.8 at 70% lower token cost.",
+      "twitter:title": "MatterAI - Inference API & AI Code Reviews",
+      "twitter:description": "Ultra-fast inference for open-source and third-party models with up to 1M context windows.",
       "twitter:image": "https://res.cloudinary.com/dxvbskvxm/image/upload/v1779722501/og-image-matter-new_kpallr.png",
       "twitter:url": "https://x.com/matteraidev"
     }
@@ -58,45 +58,10 @@
             "pages": ["introduction", "quick-start"]
           },
           {
-            "group": "AI Coding Agents",
-            "icon": "code",
-            "pages": [
-              {
-                "group": "OrbCode CLI",
-                "pages": [
-                  "orbcode-cli/overview",
-                  "orbcode-cli/install",
-                  "orbcode-cli/usage",
-                  "orbcode-cli/configuration",
-                  "orbcode-cli/mcp",
-                  "orbcode-cli/skills",
-                  "orbcode-cli/hooks",
-                  "orbcode-cli/plugins"
-                ]
-              },
-              {
-                "group": "Orbital IDE",
-                "pages": ["orbital/install", "orbital/overview"]
-              },
-              "orbital/pricing",
-              "coding-agents/analytics"
-            ]
-          },
-          {
-            "group": "Axon Models",
+            "group": "Inference API",
             "icon": "brain-circuit",
             "pages": [
               "axon-overview",
-              {
-                "group": "Models List",
-                "pages": [
-                  "axon-eido-3-pro",
-                  "axon-eido-3-mini",
-                  "axon-eido-3-flash",
-                  "axon-2-5-pro",
-                  "axon-2-5-mini"
-                ]
-              },
               "axon-ai/pricing",
               "axon-ai/api-keys",
               "axon-ai/rate-limits",
@@ -347,9 +312,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Download Orbital",
-          "href": "https://www.matterai.so",
-          "icon": "apple"
+          "anchor": "Models",
+          "href": "https://matterai.so/models",
+          "icon": "brain-circuit"
         },
         {
           "anchor": "Blog",
@@ -386,8 +351,8 @@
         "href": "https://matterai.so/contact"
       },
       {
-        "label": "Download",
-        "href": "https://matterai.so"
+        "label": "Models",
+        "href": "https://matterai.so/models"
       }
     ],
     "primary": {
