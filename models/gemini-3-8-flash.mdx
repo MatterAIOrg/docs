@@ -1,0 +1,108 @@
+---
+title: "Gemini 3.8 Flash"
+description: "Gemini 3.8 Flash API - Google's fast, low-cost model for everyday coding tasks with a 1M context window. Available on MatterAI."
+og:title: "Gemini 3.8 Flash API | MatterAI"
+og:description: "Gemini 3.8 Flash - Google's fast, low-cost model for everyday coding tasks with a 1M context window."
+og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1766239090/183_1_j23rxf.webp"
+og:url: "https://docs.matterai.so/models/gemini-3-8-flash"
+---
+
+Gemini 3.8 Flash is a fast, low-cost model by Google for everyday coding tasks. It combines strong general capability with a 1M context window and native multimodal understanding.
+
+## Specifications
+
+| Specification         | Value                          |
+| --------------------- | ------------------------------ |
+| Model ID              | `gemini-3.8-flash`             |
+| Context Window        | 232K tokens (1M inference window) |
+| Max Output Tokens     | 64K                            |
+| Input Modalities      | Text, Image                    |
+| Output Modalities     | Text                           |
+| Supported Features    | Tools, Structured Outputs, Web Search |
+
+## Pricing
+
+| Type                | Price (per 1M tokens) |
+| ------------------- | --------------------- |
+| Input               | $0.75                 |
+| Cached Input        | $0.075                |
+| Output              | $3.75                 |
+
+<Note>
+  A 30% automatic discount is applied to all Gemini 3.8 Flash usage on
+  MatterAI.
+</Note>
+
+## Quick Start
+
+```bash cURL
+curl --request POST \
+  --url https://api.matterai.so/v1/chat/completions \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $MATTERAI_API_KEY' \
+  --data '{
+  "model": "gemini-3.8-flash",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "What is Rust?"
+    }
+  ],
+  "stream": false,
+  "max_tokens": 1000
+}'
+```
+
+```javascript OpenAI NodeJS SDK
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.MATTERAI_API_KEY,
+  baseURL: "https://api.matterai.so/v1",
+});
+
+async function main() {
+  const response = await openai.chat.completions.create({
+    model: "gemini-3.8-flash",
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: "What is Rust?" },
+    ],
+    stream: false,
+    max_tokens: 1000,
+  });
+
+  console.log(response.choices[0].message.content);
+}
+
+main();
+```
+
+```python OpenAI Python SDK
+from openai import OpenAI
+
+client = OpenAI(
+  api_key=os.environ.get("MATTERAI_API_KEY"),
+  base_url="https://api.matterai.so/v1"
+)
+
+response = client.chat.completions.create(
+  model="gemini-3.8-flash",
+  messages=[
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is Rust?"}
+  ],
+  stream=False,
+  max_tokens=1000
+)
+
+print(response.choices[0].message.content)
+```
+
+## When to Use
+
+Gemini 3.8 Flash suits everyday production tasks: coding assistance, multimodal analysis, long-document comprehension, and agentic workflows that need a dependable mid-tier model with strong tool-calling.

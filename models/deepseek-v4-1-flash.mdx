@@ -1,0 +1,109 @@
+---
+title: "DeepSeek V4.1 Flash"
+description: "DeepSeek V4.1 Flash API - fast, cost-efficient model with 1M context window, vision support, and strong coding performance. Available on MatterAI."
+og:title: "DeepSeek V4.1 Flash API | MatterAI"
+og:description: "DeepSeek V4.1 Flash - 1M context window, native vision, thinking modes, and strong coding, tool-use, and agentic performance."
+og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1766239090/183_1_j23rxf.webp"
+og:url: "https://docs.matterai.so/models/deepseek-v4-1-flash"
+---
+
+DeepSeek V4.1 Flash is DeepSeek's latest fast, cost-efficient model with a 1M context window, native multimodal (vision) support, thinking and non-thinking modes, and strong coding, tool-use, and agentic performance.
+
+## Specifications
+
+| Specification         | Value                          |
+| --------------------- | ------------------------------ |
+| Model ID              | `deepseek/deepseek-v4.1-flash` |
+| Context Window        | 232K tokens (1M inference window) |
+| Max Output Tokens     | 64K                            |
+| Input Modalities      | Text, Image                    |
+| Output Modalities     | Text                           |
+| Supported Features    | Tools, Structured Outputs, Web Search |
+| License               | Open weights                   |
+
+## Pricing
+
+| Type                | Price (per 1M tokens) |
+| ------------------- | --------------------- |
+| Input               | $0.30                 |
+| Cached Input        | $0.006                |
+| Output              | $1.20                 |
+
+<Note>
+  A 25% automatic discount is applied to all DeepSeek V4.1 Flash usage on
+  MatterAI.
+</Note>
+
+## Quick Start
+
+```bash cURL
+curl --request POST \
+  --url https://api.matterai.so/v1/chat/completions \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $MATTERAI_API_KEY' \
+  --data '{
+  "model": "deepseek/deepseek-v4.1-flash",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "What is Rust?"
+    }
+  ],
+  "stream": false,
+  "max_tokens": 1000
+}'
+```
+
+```javascript OpenAI NodeJS SDK
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.MATTERAI_API_KEY,
+  baseURL: "https://api.matterai.so/v1",
+});
+
+async function main() {
+  const response = await openai.chat.completions.create({
+    model: "deepseek/deepseek-v4.1-flash",
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: "What is Rust?" },
+    ],
+    stream: false,
+    max_tokens: 1000,
+  });
+
+  console.log(response.choices[0].message.content);
+}
+
+main();
+```
+
+```python OpenAI Python SDK
+from openai import OpenAI
+
+client = OpenAI(
+  api_key=os.environ.get("MATTERAI_API_KEY"),
+  base_url="https://api.matterai.so/v1"
+)
+
+response = client.chat.completions.create(
+  model="deepseek/deepseek-v4.1-flash",
+  messages=[
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is Rust?"}
+  ],
+  stream=False,
+  max_tokens=1000
+)
+
+print(response.choices[0].message.content)
+```
+
+## When to Use
+
+DeepSeek V4.1 Flash is ideal for high-volume, cost-sensitive workloads: everyday coding assistance, agentic tool-use loops, document analysis over long contexts, and multimodal (image + text) understanding at scale.

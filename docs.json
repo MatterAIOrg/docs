@@ -62,6 +62,15 @@
             "icon": "brain-circuit",
             "pages": [
               "axon-overview",
+              {
+                "group": "Models",
+                "pages": [
+                  "models/deepseek-v4-1-flash",
+                  "models/glm-5-3",
+                  "models/glm-5-3-flash",
+                  "models/gemini-3-8-flash"
+                ]
+              },
               "system-one",
               "axon-ai/pricing",
               "axon-ai/api-keys",

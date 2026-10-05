@@ -1,0 +1,108 @@
+---
+title: "GLM 5.3"
+description: "GLM 5.3 API - Z.ai's frontier open model for complex coding tasks and long-running agents, with 1M context window. Available on MatterAI."
+og:title: "GLM 5.3 API | MatterAI"
+og:description: "GLM 5.3 - Z.ai's frontier open model for complex coding tasks and long-running agents with a 1M context window."
+og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1766239090/183_1_j23rxf.webp"
+og:url: "https://docs.matterai.so/models/glm-5-3"
+---
+
+GLM 5.3 is Z.ai's frontier open model for complex coding tasks and long-running agents. It delivers frontier-class reasoning with native tool calling and a 1M context window.
+
+## Specifications
+
+| Specification         | Value                          |
+| --------------------- | ------------------------------ |
+| Model ID              | `zai/glm-5.3`                  |
+| Context Window        | 232K tokens (1M inference window) |
+| Max Output Tokens     | 64K                            |
+| Input Modalities      | Text, Image                    |
+| Output Modalities     | Text                           |
+| Supported Features    | Tools, Structured Outputs, Web Search |
+| License               | Open weights                   |
+
+## Pricing
+
+| Type                | Price (per 1M tokens) |
+| ------------------- | --------------------- |
+| Input               | $1.40                 |
+| Cached Input        | $0.14                 |
+| Output              | $4.40                 |
+
+<Note>
+  A 30% automatic discount is applied to all GLM 5.3 usage on MatterAI.
+</Note>
+
+## Quick Start
+
+```bash cURL
+curl --request POST \
+  --url https://api.matterai.so/v1/chat/completions \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $MATTERAI_API_KEY' \
+  --data '{
+  "model": "zai/glm-5.3",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "What is Rust?"
+    }
+  ],
+  "stream": false,
+  "max_tokens": 1000
+}'
+```
+
+```javascript OpenAI NodeJS SDK
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.MATTERAI_API_KEY,
+  baseURL: "https://api.matterai.so/v1",
+});
+
+async function main() {
+  const response = await openai.chat.completions.create({
+    model: "zai/glm-5.3",
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: "What is Rust?" },
+    ],
+    stream: false,
+    max_tokens: 1000,
+  });
+
+  console.log(response.choices[0].message.content);
+}
+
+main();
+```
+
+```python OpenAI Python SDK
+from openai import OpenAI
+
+client = OpenAI(
+  api_key=os.environ.get("MATTERAI_API_KEY"),
+  base_url="https://api.matterai.so/v1"
+)
+
+response = client.chat.completions.create(
+  model="zai/glm-5.3",
+  messages=[
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is Rust?"}
+  ],
+  stream=False,
+  max_tokens=1000
+)
+
+print(response.choices[0].message.content)
+```
+
+## When to Use
+
+GLM 5.3 is the choice for demanding workloads: complex multi-file coding tasks, long-running agentic pipelines, deep reasoning over large codebases, and production agents that need frontier-class capability at open-model pricing.
