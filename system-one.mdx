@@ -1,0 +1,98 @@
+---
+title: "System One: Decision Models"
+description: "Structured decision models for fast, deterministic classification — intent, routing, sentiment, priority, and policy decisions."
+og:title: "System One Decision Models | MatterAI Documentation"
+og:description: "Structured decision models for fast, deterministic classification via the /v1/system endpoint."
+og:image: "https://res.cloudinary.com/dxvbskvxm/image/upload/v1766239090/183_1_j23rxf.webp"
+og:url: "https://docs.matterai.so/system-one"
+---
+
+System One provides structured decision models that evaluate a set of typed questions over a piece of text and return deterministic answers in a single pass. Unlike chat models, these models do not reason, explain, or generate free-form text — they are built for fast, reliable classification tasks like intent detection, routing, sentiment analysis, priority scoring, and policy decisions.
+
+## Available Models
+
+<CardGroup cols={1}>
+  <Card title="GLiNER2.5-Decide" icon="brain-circuit">
+    Fastino's 340M-parameter open-weight encoder decision model. Evaluates typed
+    questions (choice, score, yes/no) over text in a single pass with no prompt
+    templates or token generation. Free to use.
+  </Card>
+  <Card title="Clef" icon="microchip">
+    Cloudflare's 27B multimodal decision model. Reads the state as text, JSON,
+    images, or video and returns a probability for every allowed option of every
+    question.
+  </Card>
+  <Card title="Clef Flash" icon="bolt">
+    Cloudflare's fast 9B multimodal decision model. Same interface as Clef,
+    optimized for low latency.
+  </Card>
+</CardGroup>
+
+## How It Works
+
+Instead of a chat message, you send a **state** (the text to evaluate) and a **schema of typed questions**. The model jointly decodes a structured answer for every question in a single pass — no prompt templates, no token generation.
+
+Supported question types:
+
+- **choice** — pick one option from a set of criteria
+- **score** — rate the state on an ordered scale
+- **noul** — yes/no (null or non-null) decision
+
+## Usage Example
+
+```bash cURL
+curl -X POST https://api.matterai.so/v1/system \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $MATTERAI_API_KEY" \
+  -d '{
+    "model": "fastino/gliner2.5-decide",
+    "state": "The customer said the delivery was late but the product quality was excellent.",
+    "questions": {
+      "sentiment": {
+        "type": "choice",
+        "instructions": "What is the overall sentiment of this feedback?",
+        "criteria": {
+          "positive": "Customer is happy overall",
+          "negative": "Customer is unhappy overall",
+          "mixed": "Customer has both good and bad things to say"
+        }
+      },
+      "satisfaction": {
+        "type": "score",
+        "instructions": "Rate overall customer satisfaction from low to high.",
+        "criteria": ["low", "medium", "high"]
+      },
+      "needs_followup": {
+        "type": "noul",
+        "instructions": "Does this feedback require a follow-up from the support team?"
+      }
+    }
+  }'
+```
+
+## Listing Available Models
+
+```bash
+curl https://api.matterai.so/v1/system/models
+```
+
+## Constraints
+
+- `state` must be a non-empty string, up to 100,000 characters
+- `questions` must contain 1 to 100 entries, each with a `type`
+- Clef and Clef Flash accept an optional `images` array of up to 4 entries
+- System One is only available with a MatterAI API key (not JWT sessions)
+
+## Pricing
+
+| Model              | Price                          |
+| ------------------ | ------------------------------ |
+| GLiNER2.5-Decide   | Free                           |
+| Clef               | $0.24 per 1M input tokens      |
+| Clef Flash         | $0.09 per 1M input tokens      |
+
+<Note>
+  System One models are separate from the chat model catalog. They do not
+  appear in agent model pickers and are only reachable through the `/v1/system`
+  endpoint.
+</Note>

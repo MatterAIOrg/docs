@@ -62,6 +62,7 @@
             "icon": "brain-circuit",
             "pages": [
               "axon-overview",
+              "system-one",
               "axon-ai/pricing",
               "axon-ai/api-keys",
               "axon-ai/rate-limits",
